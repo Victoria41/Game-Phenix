@@ -1,0 +1,89 @@
+*{
+    margin: 0px;
+    padding: 0px;
+ }   
+.modal {
+  display: none;
+  position: fixed; 
+  z-index: 1; 
+  padding-top: 100px; 
+  width: 100%; 
+  height: 100%; 
+  overflow: auto; 
+  background-color: rgb(0,0,0); 
+  background-color: rgba(0,0,0,0.5); 
+}
+
+/* Modal Content */
+.modal-content {
+  background-color:rgba(18, 50, 146, 0.2);
+  margin: auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 30%;
+  height: 30%;
+  display: grid;
+  justify-content: center;
+
+}
+#new{
+    background-color: rgb(48, 29, 85);
+    border-radius: 5%;
+    width: 200px;
+    height: 60px;
+    color: seashell;
+    font-size: 15px;
+
+}
+#new:hover{
+    background-color: rgb(59, 37, 102);
+    color: silver;
+}
+.game{
+    font-size: 30px;
+    color:rgb(161, 158, 192);
+    text-align: center;
+    margin-top: 20px;
+}
+
+#sound{
+    width: 30px;
+    z-index: 1;
+    position: absolute;
+    display: none;
+}
+#sound:hover{
+    background-color:plum
+}
+#sound-on{
+    width: 30px;
+    z-index: 1;
+    position: absolute;
+    
+}
+#sound-on:hover{
+    background-color:plum
+}
+/* #co{
+    display: flex;
+
+} */
+#cou{
+    position: absolute;
+    font-size: 20px;
+    color:silver;
+    width: 98%;
+    display: flex;
+    justify-content: flex-end;
+    /* margin-right: -100px; */
+    
+}
+#record{
+    position: absolute;
+    margin-top: 20px;
+    font-size: 20px;
+    color: silver;
+    width: 98%;
+    display: flex;
+    justify-content: flex-end;
+}

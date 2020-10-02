@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div id="forsound">
+    <img src="music/mute.png" id="sound">
+    <img src="music/sound-on.png" id="sound-on">
+</div>
+
+<!-- The Modal -->
+    <div id="myModal" class="modal">
+
+      <!-- Modal content -->
+      <div class="modal-content">
+        <div class="game">Game over</div>        
+        <div class="game" id="demo"></div>
+            
+        <input type="button" value="New Game" onClick="document.location.reload(true); sound.play()" id="new">
+      </div>
+
+    </div>
+    <div id="co">
+        <div id="cou"></div>
+        <div id="record"></div>
+    </div>
+
+    
+
+    <video id="video" loop crossOrigin="anonymous" playsinline style="display:none">
+        <source src="./videos/sky.mp4" type='video/mp4; codecs="avc1.42E01E, mp4a.40.2"'>
+    </video>
+
+    <script type="module">
+        let collision = false
+        let collision1 = false
+        let i = 0;
+
+
+        setInterval(function(n){ 
+              if(collision1 || collision){
+                setTimeout(function(){
+                callModal();
+                stop(); 
+                
+                document.getElementById("demo").innerHTML = "Your points" + " "+i; },400)
+              }
+
+              if (localStorage.getItem("soundOn") =="no"){
+                  sound.stop();
+                  soundoff.style.display = "block";
+                  soundon.style.display = "none"
+
+
+              }else if(localStorage.getItem("soundOn") =="yes"){
+                  sound.play();
+                  soundoff.style.display = "none";
+                  soundon.style.display = "block"
+              }
+            }, 100);
+        
+
+        
+
+
+
+
+        import * as THREE from '../../build/three.module.js';
+        import {GLTFLoader} from './GLTFLoader.js';
+        import {OrbitControls} from './OrbitControls.js';
+
+        
+        let scene, renderer,camera, model, clock, mixer, mixer1,mixer2,texture,requestId,
+        fog, cloud,cloud1, object, video,modelBox, modelBox2, modelBox1,firstBB,secondBB,thirdBB,
+        soundoff, soundon, sound;
+
+
+
+        init()
+        render()
+
+        function callModal() {
+            var modal = document.getElementById("myModal");
+            modal.style.display = "block";
+            function count(){
+            if(localStorage !== undefined && i> localStorage.getItem("count")){
+                localStorage.setItem("count", i)
+                console.log(localStorage.getItem("count"))
+            }
+        }
+        
+        }
+        let newGame = documentw.getElementById("new");
+        newGame.click(function startNew(){
+            location.reload(true);
+        }) 
+
+
+        function init(){
+
+            scene = new THREE.Scene();
+            camera = new THREE.PerspectiveCamera(45,window.innerWidth/window.innerHeight, 1, 3000);
+            camera.position.set(-300,100,100);
+            renderer = new THREE.WebGLRenderer();
+            renderer.setSize(window.innerWidth-10, window.innerHeight)
+            document.body.appendChild(renderer.domElement);
+            let controls = new OrbitControls( camera, renderer.domElement );
+            controls.update();
+            //light
+            let light = new THREE.HemisphereLight( 0xffffbb, 0x080820, 1.5);
+            scene.add( light );
+            //sound load
+            var listener = new THREE.AudioListener();
+            camera.add( listener );
+
+            sound = new THREE.Audio( listener );
+
+            var audioLoader = new THREE.AudioLoader();
+            audioLoader.load( 'music/POL-dawn-of-time-short.wav', function( buffer ) {
+            	sound.setBuffer( buffer );
+            	sound.setLoop( true );
+            	sound.setVolume( 0.5 );
+            	sound.play();
+            });
+            // sound Off On
+            soundoff = document.getElementById("sound");
+            soundon = document.getElementById("sound-on");
+            soundoff.addEventListener("click", function s(){
+                if(localStorage!==undefined){
+                    localStorage.setItem("soundOn", "yes")
+                }
+                sound.play();
+                soundoff.style.display = "none"
+                soundon.style.display = "block"
+                
+
+            })
+            soundon = document.getElementById("sound-on");
+            soundon.addEventListener("click", function sn(){
+                if(localStorage!==undefined){
+                    localStorage.setItem("soundOn", "no")
+                }
+                sound.stop();
+                soundoff.style.display = "block";
+                soundon.style.display = "none";
+            })
+
+            
+
+            //for animation
+            mixer = null;
+	        clock = new THREE.Clock();
+            mixer1 = null;
+	        //
+
+            //load first Model
+            let loader = new GLTFLoader();
+            loader.load("models/scene.glb", function(glb){
+                model = glb.scene;
+                model.scale.set(0.1,0.1,0.1);
+                mixer = new THREE.AnimationMixer(model);
+                mixer.clipAction(glb.animations[0]).play();
+                scene.add(model);           
+            })
+
+            modelBox = new THREE.Mesh(new THREE.BoxGeometry(60,40,60), new THREE.MeshStandardMaterial( { color: 0xffff00 } ))
+            modelBox.position.set(0,10,0)
+            modelBox.position.needsUpdate = true;
+            firstBB = new THREE.Box3().setFromObject(modelBox);
+
+            //load second model
+            loader.load("models/eagle.glb", function(glb){
+                cloud = glb.scene;
+                mixer1 = new THREE.AnimationMixer(cloud);
+                mixer1.clipAction(glb.animations[0]).play();
+                cloud.scale.set(25,25,25);
+                cloud.position.set(600,100,0);
+                modelBox2.position.set(600,140,0);
+                cloud.rotation.set(0,-Math.PI/2,0)
+                        
+            })
+            modelBox2 = new THREE.Mesh(new THREE.BoxGeometry(60,40,60), new THREE.MeshBasicMaterial( { color: 0xffff00 } ))                        
+            secondBB = new THREE.Box3().setFromObject(modelBox2);
+
+            //load third model
+            loader.load("models/eagle.glb", function(glb){
+                cloud1 = glb.scene;
+                mixer2 = new THREE.AnimationMixer(cloud1);
+                mixer2.clipAction(glb.animations[0]).play();
+                cloud1.scale.set(25,25,25);
+                cloud1.position.set(600,100,0);
+                modelBox1.position.set(600,140,0);
+                cloud1.rotation.set(0,-Math.PI/2,0)
+                
+            })
+            modelBox1 = new THREE.Mesh(new THREE.BoxGeometry(60,40,60), new THREE.MeshBasicMaterial( { color: 0xffff00 } ))
+            thirdBB = new THREE.Box3().setFromObject(modelBox1);
+            
+            //video
+            video = document.getElementById( 'video' );
+				video.play();
+				video.addEventListener('play', function() {
+					this.currentTime = 3;
+				}, false);
+
+				texture = new THREE.VideoTexture( video );
+                scene.background = texture
+
+            //add second model
+            setInterval(function(){
+                 let z = Math.floor(Math.random()*100);
+                 if (z%3 == 0)  {
+                     z = -z;
+                 }
+                
+                cloud.position.set(600,z,0);
+                scene.add(cloud);
+                modelBox2.position.set(600,z+40,0);
+
+
+                
+            },Math.ceil(Math.random()*4+3)*1000)
+
+            //add third model
+            setInterval(function(){
+
+                let y = Math.floor(Math.random()*100);
+                 if (y%3 == 0)  {
+                     y = -y;
+                 }
+                cloud1.position.set(500,y,0);
+                modelBox1.position.set(500,y,0)
+                scene.add(cloud1);
+                // scene.add(modelBox1)
+
+            },Math.ceil(Math.random()*4+3)*1000)
+
+
+
+            document.addEventListener('keypress',(e) =>{
+                if(e.key == "w"){
+                    if(model.position.y<=100 ){
+                        model.position.y +=10
+                        modelBox.position.y+=10
+                    }
+                    else {
+                        model.position.y +=0
+                        modelBox.position.y+=0
+                    }
+
+                   
+                }
+                else if(e.key == "s"){
+                    if(model.position.y>=-100 ){
+                        model.position.y -=10
+                        modelBox.position.y-=10
+                    }
+                    else {
+                        model.position.y -=0
+                        modelBox.position.y-=0
+                    }
+                }
+            })
+
+        }
+
+        function stop() {
+            window.cancelAnimationFrame(requestId);
+            requestId = undefined;
+        } 
+
+        function point(){
+            i++;
+            document.getElementById("cou").innerHTML = "Score" + " "+ i; 
+            document.getElementById("record").innerHTML = "Your record"+ " " + localStorage.getItem("count");
+        }
+
+        
+      
+        function render(){
+            point()
+            requestId =  requestAnimationFrame(render);
+            var delta = clock.getDelta();
+            if (mixer != null) {
+                mixer.update(delta);
+            };
+            if (mixer1 != null) {
+                mixer1.update(delta);
+            };
+            if (mixer2 != null) {
+                mixer2.update(delta);
+            };
+            cloud.position.x -= 4;
+            modelBox2.position.x -=4;       
+            cloud1.position.x -= 4;
+            modelBox1.position.x -= 4; 
+            secondBB = new THREE.Box3().setFromObject(modelBox2);
+            thirdBB = new THREE.Box3().setFromObject(modelBox1);
+            firstBB = new THREE.Box3().setFromObject(modelBox);
+            collision = firstBB.isIntersectionBox(secondBB);
+            collision1 = firstBB.isIntersectionBox(thirdBB);          
+            renderer.render(scene,camera);
+
+ 
+        }
+    </script>
+    
+</body>
+</html>
