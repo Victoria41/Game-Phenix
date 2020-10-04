@@ -21,7 +21,7 @@
         <div class="game">Game over</div>        
         <div class="game" id="demo"></div>
             
-        <input type="button" value="New Game" onClick="document.location.reload(true); sound.play()" id="new">
+        <input type="button" value="New Game" onClick="document.location.reload(true);" id="new">
       </div>
 
     </div>
@@ -47,21 +47,11 @@
                 setTimeout(function(){
                 callModal();
                 stop(); 
-                
                 document.getElementById("demo").innerHTML = "Your points" + " "+i; },400)
               }
 
-              if (localStorage.getItem("soundOn") =="no"){
-                  sound.stop();
-                  soundoff.style.display = "block";
-                  soundon.style.display = "none"
 
 
-              }else if(localStorage.getItem("soundOn") =="yes"){
-                  sound.play();
-                  soundoff.style.display = "none";
-                  soundon.style.display = "block"
-              }
             }, 100);
         
 
@@ -87,14 +77,10 @@
         function callModal() {
             var modal = document.getElementById("myModal");
             modal.style.display = "block";
-            function count(){
-            if(localStorage !== undefined && i> localStorage.getItem("count")){
-                localStorage.setItem("count", i)
-                console.log(localStorage.getItem("count"))
-            }
+            
+       
         }
-        
-        }
+
         let newGame = documentw.getElementById("new");
         newGame.click(function startNew(){
             location.reload(true);
@@ -128,27 +114,39 @@
             	sound.play();
             });
             // sound Off On
+            
             soundoff = document.getElementById("sound");
             soundon = document.getElementById("sound-on");
             soundoff.addEventListener("click", function s(){
-                if(localStorage!==undefined){
+                localStorage.setItem("soundOn", "yes")
+                if(localStorage!==undefined ){
                     localStorage.setItem("soundOn", "yes")
+                    sound.play();
+                    soundoff.style.display = "none";
+                    soundon.style.display = "block"
                 }
-                sound.play();
-                soundoff.style.display = "none"
-                soundon.style.display = "block"
-                
-
             })
             soundon = document.getElementById("sound-on");
             soundon.addEventListener("click", function sn(){
-                if(localStorage!==undefined){
-                    localStorage.setItem("soundOn", "no")
+                localStorage.setItem("soundOn", "no")
+                if(localStorage!==undefined ){
+                    sound.stop();
+                    soundoff.style.display = "block";
+                    soundon.style.display = "none"; 
                 }
+
+            })
+            if(localStorage.getItem("soundOn"=="yes")){
+                sound.play();
+                soundoff.style.display = "none";
+                soundon.style.display = "block" 
+            }
+            else if(localStorage.getItem("soundOn"=="no")){
                 sound.stop();
                 soundoff.style.display = "block";
-                soundon.style.display = "none";
-            })
+                soundon.style.display = "none"; 
+            }
+            
 
             
 
@@ -238,7 +236,7 @@
                 scene.add(cloud1);
                 // scene.add(modelBox1)
 
-            },Math.ceil(Math.random()*4+3)*1000)
+            },Math.ceil(Math.random()*1+3)*1000)
 
 
 
@@ -278,12 +276,22 @@
             i++;
             document.getElementById("cou").innerHTML = "Score" + " "+ i; 
             document.getElementById("record").innerHTML = "Your record"+ " " + localStorage.getItem("count");
+            if(localStorage !== undefined && i> localStorage.getItem("count")){
+                localStorage.setItem("count", i)
+                console.log(localStorage.getItem("count"));
+                
+            
+            } 
+
+            
         }
+
 
         
       
         function render(){
             point()
+            
             requestId =  requestAnimationFrame(render);
             var delta = clock.getDelta();
             if (mixer != null) {
@@ -295,6 +303,7 @@
             if (mixer2 != null) {
                 mixer2.update(delta);
             };
+
             cloud.position.x -= 4;
             modelBox2.position.x -=4;       
             cloud1.position.x -= 4;
