@@ -25,6 +25,7 @@
         <div class="game" id="demo"></div>
             
         <input type="button" value="New Game" onClick="document.location.reload(true)" id="new">
+
       </div>
 
     </div>
@@ -67,6 +68,7 @@
                   soundoff.style.display = "none";
                   soundon.style.display = "block"
               }
+
             }, 100);
         
         
@@ -91,6 +93,7 @@
         }
         
         
+
         function init(){
             scene = new THREE.Scene();
             camera = new THREE.PerspectiveCamera(45,window.innerWidth/window.innerHeight, 0.1, 30000);
@@ -149,11 +152,21 @@
             soundon.onclick = function() {
                 if(localStorage!==undefined){
                     localStorage.setItem("soundOn", false)
+
                 }
+
+            }
+            if(localStorage.getItem("soundOn"=="yes")){
+                sound.play();
+                soundoff.style.display = "none";
+                soundon.style.display = "block" 
+            }
+            else if(localStorage.getItem("soundOn"=="no")){
                 sound.stop();
                 soundoff.style.display = "block";
                 soundon.style.display = "none";
             }
+
 
             
             //for animation
@@ -255,7 +268,7 @@
                 scene.add(cloud1);
                 // scene.add(modelBox1)
 
-            },Math.ceil(Math.random()*4+3)*1000)
+            },Math.ceil(Math.random()*1+3)*1000)
 
 
 
@@ -301,9 +314,11 @@
 
         }
 
+
       
         function render(){
             point()
+            
             requestId =  requestAnimationFrame(render);
             var delta = clock.getDelta();
             if (mixer != null) {
@@ -349,6 +364,7 @@
             if(mesh.position.x < -1000){
                 mesh.position.x=-100
             }
+
 
             secondBB = new THREE.Box3().setFromObject(modelBox2);
             thirdBB = new THREE.Box3().setFromObject(modelBox1);
