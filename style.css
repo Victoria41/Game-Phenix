@@ -87,3 +87,18 @@
     display: flex;
     justify-content: flex-end;
 }
+#startButton{
+    background-color: rgb(48, 29, 85);
+    border-radius: 5%;
+    width: 200px;
+    height: 60px;
+    color: seashell;
+    font-size: 15px;
+    z-index: 1;
+    position: absolute;
+    position: absolute;
+    top:50%;
+    left: 46%;
+
+    
+}

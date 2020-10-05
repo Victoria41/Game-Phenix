@@ -12,6 +12,9 @@
     <img src="music/mute.png" id="sound">
     <img src="music/sound-on.png" id="sound-on">
 </div>
+		<div id="overlay">
+			<button id="startButton">Play</button>
+		</div>
 
 <!-- The Modal -->
     <div id="myModal" class="modal">
@@ -21,7 +24,7 @@
         <div class="game">Game over</div>        
         <div class="game" id="demo"></div>
             
-        <input type="button" value="New Game" onClick="document.location.reload(true); sound.play()" id="new">
+        <input type="button" value="New Game" onClick="document.location.reload(true)" id="new">
       </div>
 
     </div>
@@ -32,14 +35,17 @@
 
     
 
-    <video id="video" loop crossOrigin="anonymous" playsinline style="display:none">
+    <!-- <video id="video" loop crossOrigin="anonymous" playsinline style="display:none">
         <source src="./videos/sky.mp4" type='video/mp4; codecs="avc1.42E01E, mp4a.40.2"'>
-    </video>
+    </video> -->
 
     <script type="module">
         let collision = false
         let collision1 = false
         let i = 0;
+        let soundoff = document.getElementById("sound");
+        let soundon = document.getElementById("sound-on");
+        let sound, soundGO;
 
 
         setInterval(function(n){ 
@@ -47,29 +53,23 @@
                 setTimeout(function(){
                 callModal();
                 stop(); 
+                    
                 
-                document.getElementById("demo").innerHTML = "Your points" + " "+i; },400)
+                document.getElementById("demo").innerHTML = "Your points" + " "+i; },400);
+                
               }
-
-              if (localStorage.getItem("soundOn") =="no"){
+              if (JSON.parse(localStorage.getItem("soundOn")) == false){
                   sound.stop();
                   soundoff.style.display = "block";
                   soundon.style.display = "none"
-
-
-              }else if(localStorage.getItem("soundOn") =="yes"){
-                  sound.play();
+              }else if(JSON.parse(localStorage.getItem("soundOn")) == true){
+                sound.play();
                   soundoff.style.display = "none";
                   soundon.style.display = "block"
               }
             }, 100);
         
-
         
-
-
-
-
         import * as THREE from '../../build/three.module.js';
         import {GLTFLoader} from './GLTFLoader.js';
         import {OrbitControls} from './OrbitControls.js';
@@ -77,7 +77,7 @@
         
         let scene, renderer,camera, model, clock, mixer, mixer1,mixer2,texture,requestId,
         fog, cloud,cloud1, object, video,modelBox, modelBox2, modelBox1,firstBB,secondBB,thirdBB,
-        soundoff, soundon, sound;
+        mesh;
 
 
 
@@ -87,32 +87,23 @@
         function callModal() {
             var modal = document.getElementById("myModal");
             modal.style.display = "block";
-            function count(){
-            if(localStorage !== undefined && i> localStorage.getItem("count")){
-                localStorage.setItem("count", i)
-                console.log(localStorage.getItem("count"))
-            }
+            
         }
         
-        }
-        let newGame = documentw.getElementById("new");
-        newGame.click(function startNew(){
-            location.reload(true);
-        }) 
-
-
+        
         function init(){
-
             scene = new THREE.Scene();
-            camera = new THREE.PerspectiveCamera(45,window.innerWidth/window.innerHeight, 1, 3000);
-            camera.position.set(-300,100,100);
-            renderer = new THREE.WebGLRenderer();
+            camera = new THREE.PerspectiveCamera(45,window.innerWidth/window.innerHeight, 0.1, 30000);
+            camera.position.set(-300,-50,300);
+            renderer = new THREE.WebGLRenderer({antialias:true});
             renderer.setSize(window.innerWidth-10, window.innerHeight)
             document.body.appendChild(renderer.domElement);
             let controls = new OrbitControls( camera, renderer.domElement );
-            controls.update();
+            controls.minDistance = 100;
+            controls.maxDistance = 3000;
+            let distance = camera.position.distanceTo( controls);
             //light
-            let light = new THREE.HemisphereLight( 0xffffbb, 0x080820, 1.5);
+            let light = new THREE.HemisphereLight( 0xffffbb, 0x080820, 1);
             scene.add( light );
             //sound load
             var listener = new THREE.AudioListener();
@@ -121,37 +112,50 @@
             sound = new THREE.Audio( listener );
 
             var audioLoader = new THREE.AudioLoader();
-            audioLoader.load( 'music/POL-dawn-of-time-short.wav', function( buffer ) {
+            audioLoader.load( './music/POL-dawn-of-time-short.wav', function( buffer ) {
             	sound.setBuffer( buffer );
             	sound.setLoop( true );
             	sound.setVolume( 0.5 );
+                sound.autoPlay = true
             	sound.play();
             });
+
+
+            let startButton = document.getElementById( 'startButton' );
+			startButton.addEventListener( 'click', function () {
+
+				Ammo().then( function () {
+
+					init();
+					animate();
+
+				} );
+
+			} );
+
+
+
             // sound Off On
-            soundoff = document.getElementById("sound");
-            soundon = document.getElementById("sound-on");
-            soundoff.addEventListener("click", function s(){
+            
+
+            soundoff.onclick = function() {
                 if(localStorage!==undefined){
-                    localStorage.setItem("soundOn", "yes")
+                    localStorage.setItem("soundOn", true)
                 }
                 sound.play();
                 soundoff.style.display = "none"
                 soundon.style.display = "block"
-                
-
-            })
-            soundon = document.getElementById("sound-on");
-            soundon.addEventListener("click", function sn(){
+            }
+            soundon.onclick = function() {
                 if(localStorage!==undefined){
-                    localStorage.setItem("soundOn", "no")
+                    localStorage.setItem("soundOn", false)
                 }
                 sound.stop();
                 soundoff.style.display = "block";
                 soundon.style.display = "none";
-            })
+            }
 
             
-
             //for animation
             mixer = null;
 	        clock = new THREE.Clock();
@@ -169,7 +173,6 @@
             })
 
             modelBox = new THREE.Mesh(new THREE.BoxGeometry(60,40,60), new THREE.MeshStandardMaterial( { color: 0xffff00 } ))
-            modelBox.position.set(0,10,0)
             modelBox.position.needsUpdate = true;
             firstBB = new THREE.Box3().setFromObject(modelBox);
 
@@ -180,8 +183,9 @@
                 mixer1.clipAction(glb.animations[0]).play();
                 cloud.scale.set(25,25,25);
                 cloud.position.set(600,100,0);
-                modelBox2.position.set(600,140,0);
-                cloud.rotation.set(0,-Math.PI/2,0)
+                modelBox2.position.set(5000,140,0);
+                cloud.rotation.set(0,-Math.PI/2,0);
+                
                         
             })
             modelBox2 = new THREE.Mesh(new THREE.BoxGeometry(60,40,60), new THREE.MeshBasicMaterial( { color: 0xffff00 } ))                        
@@ -194,36 +198,49 @@
                 mixer2.clipAction(glb.animations[0]).play();
                 cloud1.scale.set(25,25,25);
                 cloud1.position.set(600,100,0);
-                modelBox1.position.set(600,140,0);
+                modelBox1.position.set(5000,140,0);
                 cloud1.rotation.set(0,-Math.PI/2,0)
                 
+                
             })
-            modelBox1 = new THREE.Mesh(new THREE.BoxGeometry(60,40,60), new THREE.MeshBasicMaterial( { color: 0xffff00 } ))
+            modelBox1 = new THREE.Mesh(new THREE.BoxGeometry(60,40,60), new THREE.MeshBasicMaterial( { color: 0x00ff00 } ))
             thirdBB = new THREE.Box3().setFromObject(modelBox1);
             
-            //video
-            video = document.getElementById( 'video' );
-				video.play();
-				video.addEventListener('play', function() {
-					this.currentTime = 3;
-				}, false);
 
-				texture = new THREE.VideoTexture( video );
-                scene.background = texture
 
+            let material = [];
+            let texture_fk = new THREE.TextureLoader().load('penguins/divine_ft.jpg')
+            let texture_bk = new THREE.TextureLoader().load('penguins/divine_bk.jpg')
+            let texture_up = new THREE.TextureLoader().load('penguins/divine_up.jpg')
+            let texture_dn = new THREE.TextureLoader().load('penguins/divine_dn.jpg')
+            let texture_rt = new THREE.TextureLoader().load('penguins/divine_rt.jpg')
+            let texture_lf = new THREE.TextureLoader().load('penguins/divine_lf.jpg')
+
+            material.push( new THREE.MeshBasicMaterial({map:texture_fk}))
+            material.push( new THREE.MeshBasicMaterial({map:texture_bk}))
+            material.push( new THREE.MeshBasicMaterial({map:texture_up}))
+            material.push( new THREE.MeshBasicMaterial({map:texture_dn}))
+            material.push( new THREE.MeshBasicMaterial({map:texture_rt}))
+            material.push( new THREE.MeshBasicMaterial({map:texture_lf}))
+
+            for (let j = 0; j<6; j++){
+                material[j].side = THREE.BackSide
+            }
+
+            let geo = new THREE.BoxGeometry(5000,5000,5000)
+            mesh = new THREE.Mesh(geo, material);
+            mesh.position.set(-100,100,-100)
+            scene.add(mesh)
             //add second model
             setInterval(function(){
-                 let z = Math.floor(Math.random()*100);
-                 if (z%3 == 0)  {
-                     z = -z;
-                 }
+                let z = Math.floor(Math.random()*100);
+                if (z%3 == 0)  {
+                    z = -z;
+                }
                 
                 cloud.position.set(600,z,0);
                 scene.add(cloud);
-                modelBox2.position.set(600,z+40,0);
-
-
-                
+                modelBox2.position.set(600,z+40,0);                
             },Math.ceil(Math.random()*4+3)*1000)
 
             //add third model
@@ -231,7 +248,7 @@
 
                 let y = Math.floor(Math.random()*100);
                  if (y%3 == 0)  {
-                     y = -y;
+                    y = -y;
                  }
                 cloud1.position.set(500,y,0);
                 modelBox1.position.set(500,y,0)
@@ -275,12 +292,15 @@
         } 
 
         function point(){
-            i++;
+            i++;            
             document.getElementById("cou").innerHTML = "Score" + " "+ i; 
             document.getElementById("record").innerHTML = "Your record"+ " " + localStorage.getItem("count");
+            if(localStorage !== undefined && i> localStorage.getItem("count")){
+                localStorage.setItem("count", i)                            
+            } 
+
         }
 
-        
       
         function render(){
             point()
@@ -295,10 +315,41 @@
             if (mixer2 != null) {
                 mixer2.update(delta);
             };
-            cloud.position.x -= 4;
-            modelBox2.position.x -=4;       
-            cloud1.position.x -= 4;
-            modelBox1.position.x -= 4; 
+            if(i<1000){
+                cloud.position.x -= 4;
+                modelBox2.position.x -=4;       
+                cloud1.position.x -= 4;
+                modelBox1.position.x -= 4; 
+            }
+            else if(i>1000){
+                cloud.position.x -= 6;
+                modelBox2.position.x -= 6;       
+                cloud1.position.x -= 6;
+                modelBox1.position.x -= 6; 
+            }
+            else if(i>1800){
+                cloud.position.x -= 8;
+                modelBox2.position.x -=8;       
+                cloud1.position.x -= 8;
+                modelBox1.position.x -= 8; 
+            }
+            else if(i>2500){
+                cloud.position.x -= 10;
+                modelBox2.position.x -=10;       
+                cloud1.position.x -= 10;
+                modelBox1.position.x -= 10; 
+            }
+            else if(i>3500){
+                cloud.position.x -= 12;
+                modelBox2.position.x -=12;       
+                cloud1.position.x -= 12;
+                modelBox1.position.x -= 12; 
+            }
+            mesh.position.x -= 4;
+            if(mesh.position.x < -1000){
+                mesh.position.x=-100
+            }
+
             secondBB = new THREE.Box3().setFromObject(modelBox2);
             thirdBB = new THREE.Box3().setFromObject(modelBox1);
             firstBB = new THREE.Box3().setFromObject(modelBox);
