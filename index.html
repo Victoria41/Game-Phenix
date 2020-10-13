@@ -90,16 +90,14 @@
         setInterval(function(n){ 
             if(collision1||collision || collision2 ||collision3 ||collision4){
                 moveFunc = false
-                setTimeout(function(){
-                    clearInterval(setInt1)
-                    clearInterval(setInt2)
-                    clearInterval(setInt3)
-                    clearInterval(setInt4)
-                    clearInterval(setInt5)
-                    callModal();
-                    stop();   
-                    document.getElementById("demo").innerHTML = "Your points" + " "+i; 
-                },400);                
+                clearInterval(setInt1)
+                clearInterval(setInt2)
+                clearInterval(setInt3)
+                clearInterval(setInt4)
+                clearInterval(setInt5)
+                callModal();
+                stop();   
+                document.getElementById("demo").innerHTML = "Your points" + " "+i; 
             }
             localStorage.setItem("volume", volume.value)
             sound.setVolume(JSON.parse(localStorage.getItem("volume")))
@@ -125,7 +123,6 @@
         fog, eagle1,eagle2,eagle3, eagle4,eagle5, modelBox, eagleBox1, eagleBox2, eagleBox3,eagleBox4,eagleBox5, 
         firstBB,secondBB,thirdBB,fourBB,fifthBB,sixthBB, mesh, setInt1, setInt2,setInt3, setInt4,setInt5,
         sound1,sound2, audioLoader,wsad, childW;
-        let eagle = false;
         
         init();
         animate();
@@ -239,7 +236,6 @@
 			startButton.addEventListener( 'click', function () {
                 document.getElementById("cursor").style.display = "none"
                 document.getElementById("finger").style.display = "none"
-                eagle = true
                 moveFunc = true
                 onClicked();
                 render();
