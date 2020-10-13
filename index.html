@@ -40,7 +40,7 @@
             <img src="buttons/down.png" id="down">
         </div>
     </div>
-    <div class="wsad">
+    <div id="wsad">
         <div class="keypr" id="w">W</div>
         <div>
             <div class="keypr" id="a">A</div>
@@ -245,9 +245,9 @@
                 render();
                 startButton.style.display = "none";
                 name.style.display = "none"
-                wsad = document.getElementsByClassName("wsad")[0];
+                wsad = document.getElementById("wsad");
                 childW = document.createElement("style")
-                childW.innerHTML = ".keypr{animation-name: key;animation-duration: 3s;}@keyframes key{from{opacity: 0; display: block}to{opacity: 1;display: none}}"
+                childW.innerHTML = ".keypr{animation-name: key;animation-duration: 3s;}@keyframes key{from{opacity: 1; display: block}to{opacity: 0;display: none}}"
                 wsad.appendChild(childW)
 			});
 
@@ -401,7 +401,7 @@
                 eagle2.position.set(500,y1,z1);
                 eagleBox2.position.set(500,y1,z1);
                 scene.add(eagle2);
-            },Math.ceil(Math.random()*4+3)*1000)
+            },Math.ceil(Math.random()*4+4)*1000)
             
             setInt3 = setInterval(function(){
                 let y2 = Math.floor(Math.random()*100);
@@ -415,7 +415,7 @@
                 eagle3.position.set(600,y2,z2);
                 scene.add(eagle3);
                 eagleBox3.position.set(600,y2+40,z2);                
-            },Math.ceil(Math.random()*4+3)*1000)
+            },Math.ceil(Math.random()*4+4)*1000)
 
             setInt4 = setInterval(function(){
                 let y3 = Math.floor(Math.random()*100);
@@ -429,7 +429,7 @@
                 eagle4.position.set(600,y3,z3);
                 scene.add(eagle4);
                 eagleBox4.position.set(600,y3+40,z3);  
-            },Math.ceil(Math.random()*4+3)*1000)
+            },Math.ceil(Math.random()*4+4)*1000)
 
             setInt5 = setInterval(function(){
                 if(i>1000){
@@ -445,7 +445,7 @@
                 scene.add(eagle5);
                 eagleBox5.position.set(600,y4+40,z4);  
                 }
-            },Math.ceil(Math.random()*4+3)*1000)
+            },Math.ceil(Math.random()*4+4)*1000)
 
             let down = document.getElementById("down");
             down.onclick = function(){

@@ -208,8 +208,6 @@
     position: absolute;
     top: 70%;
     left:calc(50% - 45px);
-
-    /* WIDTH: 300px; */
     flex-direction: column;
     justify-content: center;
     align-items: center;
@@ -236,18 +234,21 @@
     background-color:  rgb(48, 29, 85,0.5);
     text-align: center;
     color: silver;
-    font-size: 18px;    
+    font-size: 18px;   
+    opacity: 0;
 }
-@media only screen and (min-width: 1000px) {
+@media only screen and (max-width: 1000px) {
     .keypr {
         display: none;
     }
 }
 
+
 #w{
     position: absolute;
     left: 50px;
     top: 85%;
+    z-index: 12;
 }
 #a{
     position: absolute;
@@ -263,9 +264,7 @@
     top: 90%;
     left: 100px;
 }
-.keypr{
-    opacity: 0;
-}
+
 @media only screen and (max-width: 950px) {
     .game{
         font-size: 18px;
@@ -369,6 +368,3 @@
         display: block;
     }
 }
-/* #name{
-    display: none;
-} */
