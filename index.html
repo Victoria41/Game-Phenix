@@ -1,90 +1,134 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>3D Phoenix</title>
+    <link rel="shortcut icon" type="image/x-icon" href="buttons/fenixpng.png">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
-<div id="forsound">
-    <img src="music/mute.png" id="sound">
-    <img src="music/sound-on.png" id="sound-on">
-</div>
-		<div id="overlay">
-			<button id="startButton">Play</button>
-		</div>
-
+    <div id="overlay">
+        <button id="startButton">Start</button>
+        <input type="text" id="name">
+    </div>
+    <div id="forsound">
+        <img src="music/mute.png" id="sound">
+        <img src="music/sound-on.png" id="sound-on">
+        <input type=range min=0 max=1 value=20 id=fader step=0.1>
+    </div>
+    <div class="dropdown">
+        <button class="dropbtn">Choose the game music</button>
+        <div id="dropdown-content">
+            <div id="song1">Heathens</div>
+            <div id="song2">Westworld</div>
+            <div id="song3">Remember the name</div>
+            <div id="song4">The king</div>
+        </div>
+    </div>
+    
+    <div class="updown">
+        <div>
+            <img src="buttons/up.png" id="up">
+        </div>
+        <div class="rightleft">
+            <img src="buttons/left.png" id="left">
+            <img src="buttons/right.png" id="right">
+        </div>
+        <div>
+            <img src="buttons/down.png" id="down">
+        </div>
+    </div>
+    <div class="wsad">
+        <div class="keypr" id="w">W</div>
+        <div>
+            <div class="keypr" id="a">A</div>
+            <div class="keypr" id="d">D</div>
+        </div>
+        <div class="keypr" id="s">S</div>
+    </div>
+    <div id="cursor">
+        <img src="buttons/cursor.png">
+        
+    </div>
+    <div id="finger">
+        <img src="buttons/icons8-курсор-рука-64.png">
+    </div>
 <!-- The Modal -->
     <div id="myModal" class="modal">
-
       <!-- Modal content -->
       <div class="modal-content">
         <div class="game">Game over</div>        
-        <div class="game" id="demo"></div>
-            
-        <input type="button" value="New Game" onClick="document.location.reload(true)" id="new">
-
+        <div class="game" id="demo"></div>            
+        <input type="button" value="New Game" id="new">
       </div>
-
     </div>
     <div id="co">
         <div id="cou"></div>
         <div id="record"></div>
     </div>
-
     
-
-    <!-- <video id="video" loop crossOrigin="anonymous" playsinline style="display:none">
-        <source src="./videos/sky.mp4" type='video/mp4; codecs="avc1.42E01E, mp4a.40.2"'>
-    </video> -->
-
     <script type="module">
         let collision = false
         let collision1 = false
-        let i = 0;
+        let collision2 = false
+        let collision3 = false
+        let collision4 = false
+        let moveFunc = false
+        let i = 0, sound;
         let soundoff = document.getElementById("sound");
         let soundon = document.getElementById("sound-on");
-        let sound, soundGO;
-
+        let volume = document.getElementById("fader");
+        volume.value = JSON.parse(localStorage.getItem("volume"))
+        
+        let new1 = document.querySelector("#new");
+        new1.onclick = function(){
+            document.location.reload(true)
+        }
 
         setInterval(function(n){ 
-              if(collision1 || collision){
+            if(collision1||collision || collision2 ||collision3 ||collision4){
+                moveFunc = false
                 setTimeout(function(){
-                callModal();
-                stop(); 
-                    
-                
-                document.getElementById("demo").innerHTML = "Your points" + " "+i; },400);
-                
-              }
-              if (JSON.parse(localStorage.getItem("soundOn")) == false){
-                  sound.stop();
-                  soundoff.style.display = "block";
-                  soundon.style.display = "none"
-              }else if(JSON.parse(localStorage.getItem("soundOn")) == true){
-                sound.play();
-                  soundoff.style.display = "none";
-                  soundon.style.display = "block"
-              }
-
-            }, 100);
-        
+                    clearInterval(setInt1)
+                    clearInterval(setInt2)
+                    clearInterval(setInt3)
+                    clearInterval(setInt4)
+                    clearInterval(setInt5)
+                    callModal();
+                    stop();   
+                    document.getElementById("demo").innerHTML = "Your points" + " "+i; 
+                },400);                
+            }
+            localStorage.setItem("volume", volume.value)
+            sound.setVolume(JSON.parse(localStorage.getItem("volume")))
+            if (JSON.parse(localStorage.getItem("soundOn")) == false &&  sound.isPlaying){
+                sound.stop()
+                soundoff.style.display = "block";
+                soundon.style.display = "none";
+                volume.style.display = "none"
+            }
+            else if(JSON.parse(localStorage.getItem("soundOn")) == true){
+                soundoff.style.display = "none";
+                soundon.style.display = "block";
+                volume.style.display = "block"
+            }
+  
+        }, 100);
         
         import * as THREE from '../../build/three.module.js';
         import {GLTFLoader} from './GLTFLoader.js';
         import {OrbitControls} from './OrbitControls.js';
 
+        let scene, renderer,camera, model, clock, mixer, mixer1,mixer2,mixer3,mixer4,mixer5,texture,requestId,
+        fog, eagle1,eagle2,eagle3, eagle4,eagle5, modelBox, eagleBox1, eagleBox2, eagleBox3,eagleBox4,eagleBox5, 
+        firstBB,secondBB,thirdBB,fourBB,fifthBB,sixthBB, mesh, setInt1, setInt2,setInt3, setInt4,setInt5,
+        sound1,sound2, audioLoader,wsad, childW;
+        let eagle = false;
         
-        let scene, renderer,camera, model, clock, mixer, mixer1,mixer2,texture,requestId,
-        fog, cloud,cloud1, object, video,modelBox, modelBox2, modelBox1,firstBB,secondBB,thirdBB,
-        mesh;
-
-
-
-        init()
-        render()
+        init();
+        animate();
 
         function callModal() {
             var modal = document.getElementById("myModal");
@@ -92,55 +136,81 @@
             
         }
         
-        
-
         function init(){
             scene = new THREE.Scene();
             camera = new THREE.PerspectiveCamera(45,window.innerWidth/window.innerHeight, 0.1, 30000);
-            camera.position.set(-300,-50,300);
+            camera.position.set(-400,100,0);
             renderer = new THREE.WebGLRenderer({antialias:true});
-            renderer.setSize(window.innerWidth-10, window.innerHeight)
+            renderer.setSize(window.innerWidth-4, window.innerHeight-4);
             document.body.appendChild(renderer.domElement);
             let controls = new OrbitControls( camera, renderer.domElement );
             controls.minDistance = 100;
-            controls.maxDistance = 3000;
+            controls.maxDistance = 300000;
             let distance = camera.position.distanceTo( controls);
             //light
-            let light = new THREE.HemisphereLight( 0xffffbb, 0x080820, 1);
-            scene.add( light );
-            //sound load
+            let light = new THREE.HemisphereLight( 0xeeeeff, 0x777788, 0.75 );
+			light.position.set( 0.5, 1, 0.75 );
+			scene.add( light );
+            scene.add( mesh );
+
+            let song1 = document.getElementById("song1")
+            let song2 = document.getElementById("song2")
+            let song3 = document.getElementById("song3")
+            let song4 = document.getElementById("song4")
+            
             var listener = new THREE.AudioListener();
             camera.add( listener );
-
             sound = new THREE.Audio( listener );
-
-            var audioLoader = new THREE.AudioLoader();
-            audioLoader.load( './music/POL-dawn-of-time-short.wav', function( buffer ) {
+            audioLoader = new THREE.AudioLoader();
+            function song(){
+                sound1 = localStorage.getItem("sound")
+                audioLoader.load( sound1, function( buffer ) {
             	sound.setBuffer( buffer );
             	sound.setLoop( true );
-            	sound.setVolume( 0.5 );
                 sound.autoPlay = true
-            	sound.play();
+                sound.play();
             });
-
-
-            let startButton = document.getElementById( 'startButton' );
-			startButton.addEventListener( 'click', function () {
-
-				Ammo().then( function () {
-
-					init();
-					animate();
-
-				} );
-
-			} );
-
-
-
-            // sound Off On
+            }
+            song()
+            soundoff.click()
+            let drop = document.getElementById('dropdown-content')
+            let drop1 = document.getElementsByClassName('dropdown')[0]
+            let drobd = document.getElementsByClassName("dropbtn")[0]
+            song1.onclick = function(){
+                localStorage.setItem("sound", './music/Heathens.mp3' )
+                song();
+                drop.style.display = "none"
+                soundoff.click();
+            }
+            song2.onclick = function(){
+                localStorage.setItem("sound", './music/westworld.mp3' )
+                song();
+                drop.style.display = "none"
+                soundon.click();
+                soundoff.click();
+            }
+            song3.onclick = function(){
+                localStorage.setItem("sound", './music/sound2.mp3' )
+                song();
+                drop.style.display = "none"
+                soundon.click();
+                soundoff.click();
+            }
+            song4.onclick = function(){
+                localStorage.setItem("sound", './music/sound3.mp3' )
+                song();
+                drop.style.display = "none"
+                soundon.click();
+                soundoff.click();
+            }
             
-
+            drop1.addEventListener("mousemove", function(){
+                drop.style.display = "block"
+            })
+            drop1.addEventListener("mouseout", function(){
+                drop.style.display = "none"
+            })
+            
             soundoff.onclick = function() {
                 if(localStorage!==undefined){
                     localStorage.setItem("soundOn", true)
@@ -152,30 +222,39 @@
             soundon.onclick = function() {
                 if(localStorage!==undefined){
                     localStorage.setItem("soundOn", false)
-
                 }
-
             }
-            if(localStorage.getItem("soundOn"=="yes")){
+
+            if(JSON.parse(localStorage.getItem("soundOn"))==true){
                 sound.play();
                 soundoff.style.display = "none";
                 soundon.style.display = "block" 
             }
-            else if(localStorage.getItem("soundOn"=="no")){
-                sound.stop();
+            else if(JSON.parse(localStorage.getItem("soundOn"))==false){
                 soundoff.style.display = "block";
                 soundon.style.display = "none";
             }
 
+            let startButton = document.getElementById( 'startButton' );
+			startButton.addEventListener( 'click', function () {
+                document.getElementById("cursor").style.display = "none"
+                document.getElementById("finger").style.display = "none"
+                eagle = true
+                moveFunc = true
+                onClicked();
+                render();
+                startButton.style.display = "none";
+                name.style.display = "none"
+                wsad = document.getElementsByClassName("wsad")[0];
+                childW = document.createElement("style")
+                childW.innerHTML = ".keypr{animation-name: key;animation-duration: 3s;}@keyframes key{from{opacity: 0; display: block}to{opacity: 1;display: none}}"
+                wsad.appendChild(childW)
+			});
 
-            
-            //for animation
             mixer = null;
 	        clock = new THREE.Clock();
             mixer1 = null;
-	        //
 
-            //load first Model
             let loader = new GLTFLoader();
             loader.load("models/scene.glb", function(glb){
                 model = glb.scene;
@@ -189,37 +268,95 @@
             modelBox.position.needsUpdate = true;
             firstBB = new THREE.Box3().setFromObject(modelBox);
 
-            //load second model
             loader.load("models/eagle.glb", function(glb){
-                cloud = glb.scene;
-                mixer1 = new THREE.AnimationMixer(cloud);
+                eagle1 = glb.scene;
+                mixer1 = new THREE.AnimationMixer(eagle1);
                 mixer1.clipAction(glb.animations[0]).play();
-                cloud.scale.set(25,25,25);
-                cloud.position.set(600,100,0);
-                modelBox2.position.set(5000,140,0);
-                cloud.rotation.set(0,-Math.PI/2,0);
-                
-                        
+                eagle1.scale.set(25,25,25);
+                eagle1.position.set(600,100,0);
+                eagleBox1.position.set(5000,140,0);
+                eagle1.rotation.set(0,-Math.PI/2,0);
+                eagle1.traverse(item => {
+                    if(item.isMesh){
+                        item.material.transparent = true  
+                        item.material.opacity = 0;  
+                    }
+                })
             })
-            modelBox2 = new THREE.Mesh(new THREE.BoxGeometry(60,40,60), new THREE.MeshBasicMaterial( { color: 0xffff00 } ))                        
-            secondBB = new THREE.Box3().setFromObject(modelBox2);
+            eagleBox1 = new THREE.Mesh(new THREE.BoxGeometry(60,40,60), new THREE.MeshBasicMaterial( { color: 0xffff00 } ))                        
+            secondBB = new THREE.Box3().setFromObject(eagleBox1);
 
-            //load third model
             loader.load("models/eagle.glb", function(glb){
-                cloud1 = glb.scene;
-                mixer2 = new THREE.AnimationMixer(cloud1);
+                eagle2 = glb.scene;
+                mixer2 = new THREE.AnimationMixer(eagle2);
                 mixer2.clipAction(glb.animations[0]).play();
-                cloud1.scale.set(25,25,25);
-                cloud1.position.set(600,100,0);
-                modelBox1.position.set(5000,140,0);
-                cloud1.rotation.set(0,-Math.PI/2,0)
-                
-                
+                eagle2.scale.set(25,25,25);
+                eagle2.position.set(600,100,0);
+                eagleBox2.position.set(5000,140,0);
+                eagle2.rotation.set(0,-Math.PI/2,0);
+                eagle2.traverse(item => {
+                    if(item.isMesh){
+                        item.material.transparent = true  
+                        item.material.opacity = 0;  
+                    }
+                })
             })
-            modelBox1 = new THREE.Mesh(new THREE.BoxGeometry(60,40,60), new THREE.MeshBasicMaterial( { color: 0x00ff00 } ))
-            thirdBB = new THREE.Box3().setFromObject(modelBox1);
-            
+            eagleBox2 = new THREE.Mesh(new THREE.BoxGeometry(60,40,60), new THREE.MeshBasicMaterial( { color: 0x00ff00 } ))
+            thirdBB = new THREE.Box3().setFromObject(eagleBox2);
 
+            loader.load("models/eagle.glb", function(glb){
+                eagle3 = glb.scene;
+                mixer3 = new THREE.AnimationMixer(eagle3);
+                mixer3.clipAction(glb.animations[0]).play();
+                eagle3.scale.set(25,25,25);
+                eagle3.position.set(600,100,0);
+                eagleBox3.position.set(5000,140,0);
+                eagle3.rotation.set(0,-Math.PI/2,0);
+                eagle3.traverse(item => {
+                    if(item.isMesh){
+                        item.material.transparent = true  
+                        item.material.opacity = 0;  
+                    }
+                })
+            })
+            eagleBox3 = new THREE.Mesh(new THREE.BoxGeometry(60,40,60), new THREE.MeshBasicMaterial( { color: 0xffff00 } ))                        
+            fourBB = new THREE.Box3().setFromObject(eagleBox3);
+
+            loader.load("models/eagle.glb", function(glb){
+                eagle4 = glb.scene;
+                mixer4 = new THREE.AnimationMixer(eagle4);
+                mixer4.clipAction(glb.animations[0]).play();
+                eagle4.scale.set(25,25,25);
+                eagle4.position.set(600,100,0);
+                eagleBox4.position.set(5000,140,0);
+                eagle4.rotation.set(0,-Math.PI/2,0);
+                eagle4.traverse(item => {
+                    if(item.isMesh){
+                        item.material.transparent = true  
+                        item.material.opacity = 0;  
+                    }
+                })
+            })
+            eagleBox5 = new THREE.Mesh(new THREE.BoxGeometry(60,40,60), new THREE.MeshBasicMaterial( { color: 0xffff00 } ))                        
+            sixthBB = new THREE.Box3().setFromObject(eagleBox5);
+
+            loader.load("models/eagle.glb", function(glb){
+                eagle5 = glb.scene;
+                mixer5 = new THREE.AnimationMixer(eagle5);
+                mixer5.clipAction(glb.animations[0]).play();
+                eagle5.scale.set(25,25,25);
+                eagle5.position.set(600,100,0);
+                eagleBox5.position.set(5000,140,0);
+                eagle5.rotation.set(0,-Math.PI/2,0);
+                eagle5.traverse(item => {
+                    if(item.isMesh){
+                        item.material.transparent = true  
+                        item.material.opacity = 0;  
+                    }
+                })
+            })
+            eagleBox4 = new THREE.Mesh(new THREE.BoxGeometry(60,40,60), new THREE.MeshBasicMaterial( { color: 0xffff00 } ))                        
+            fifthBB = new THREE.Box3().setFromObject(eagleBox4);
 
             let material = [];
             let texture_fk = new THREE.TextureLoader().load('penguins/divine_ft.jpg')
@@ -245,36 +382,123 @@
             mesh.position.set(-100,100,-100)
             scene.add(mesh)
             //add second model
-            setInterval(function(){
-                let z = Math.floor(Math.random()*100);
-                if (z%3 == 0)  {
-                    z = -z;
-                }
-                
-                cloud.position.set(600,z,0);
-                scene.add(cloud);
-                modelBox2.position.set(600,z+40,0);                
+
+            setInt1 = setInterval(function(){
+                eagle1.position.set(600,model.position.y,model.position.z);
+                scene.add(eagle1);
+                eagleBox1.position.set(600,model.position.y,model.position.z);                
             },Math.ceil(Math.random()*4+3)*1000)
 
-            //add third model
-            setInterval(function(){
+            setInt2 = setInterval(function(){
+                let y1 = Math.floor(Math.random()*100);
+                if (y1%3 == 0)  {
+                y1 = -y1;
+                }
+                let z1 = Math.floor(Math.random()*100);
+                if(z1%3 == 0){
+                    z1 = -z1
+                }
+                eagle2.position.set(500,y1,z1);
+                eagleBox2.position.set(500,y1,z1);
+                scene.add(eagle2);
+            },Math.ceil(Math.random()*4+3)*1000)
+            
+            setInt3 = setInterval(function(){
+                let y2 = Math.floor(Math.random()*100);
+                if (y2%3 == 0)  {
+                    y2 = -y2;
+                }
+                let z2 = Math.floor(Math.random()*100);
+                if(z2%3 == 0){
+                    z2 = -z2
+                }
+                eagle3.position.set(600,y2,z2);
+                scene.add(eagle3);
+                eagleBox3.position.set(600,y2+40,z2);                
+            },Math.ceil(Math.random()*4+3)*1000)
 
-                let y = Math.floor(Math.random()*100);
-                 if (y%3 == 0)  {
-                    y = -y;
-                 }
-                cloud1.position.set(500,y,0);
-                modelBox1.position.set(500,y,0)
-                scene.add(cloud1);
-                // scene.add(modelBox1)
+            setInt4 = setInterval(function(){
+                let y3 = Math.floor(Math.random()*100);
+                if (y3%3 == 0)  {
+                    y3 = -y3;
+                }
+                let z3 = Math.floor(Math.random()*100);
+                if(z3%3 == 0){
+                    z3 = -z3
+                }
+                eagle4.position.set(600,y3,z3);
+                scene.add(eagle4);
+                eagleBox4.position.set(600,y3+40,z3);  
+            },Math.ceil(Math.random()*4+3)*1000)
 
-            },Math.ceil(Math.random()*1+3)*1000)
+            setInt5 = setInterval(function(){
+                if(i>1000){
+                    let y4 = Math.floor(Math.random()*100);
+                if (y4%2 == 0)  {
+                    y4 = -y4;
+                }
+                let z4 = Math.floor(Math.random()*100);
+                if(z4%3 == 0){
+                    z4 = -z4
+                }
+                eagle5.position.set(600,y4,z4);
+                scene.add(eagle5);
+                eagleBox5.position.set(600,y4+40,z4);  
+                }
+            },Math.ceil(Math.random()*4+3)*1000)
 
+            let down = document.getElementById("down");
+            down.onclick = function(){
+                if(model.position.y>=-100 ){
+                    model.position.y -=10
+                    modelBox.position.y-=10
+                }
+                else {
+                    model.position.y -=0
+                    modelBox.position.y-=0
+                }
+            }
 
+            let up = document.getElementById("up");
+            up.onclick = function(){
+                if(model.position.y<=100 ){
+                    model.position.y +=10
+                    modelBox.position.y+=10
+                }
+                else {
+                    model.position.y +=0
+                    modelBox.position.y+=0
+                }
+            }
 
-            document.addEventListener('keypress',(e) =>{
-                if(e.key == "w"){
-                    if(model.position.y<=100 ){
+            let right = document.getElementById("right");
+            right.onclick= function(){
+                if(model.position.z<=150){
+                    model.position.z +=10
+                    modelBox.position.z+=10
+                }
+                else {
+                    model.position.z +=0
+                    modelBox.position.z +=0
+                }
+            }
+
+            let left = document.getElementById("left")
+            left.onclick = function(){
+                if(model.position.z>=-150 ){
+                    model.position.z -=10
+                    modelBox.position.z-=10
+                }
+                else {
+                    model.position.z -=0
+                    modelBox.position.z-=0
+                }
+            }
+
+            function move(){
+                document.addEventListener('keypress',(e) =>{
+                if((e.key == "w" || e.key == "W") && moveFunc){
+                    if(model.position.y<=120 ){
                         model.position.y +=10
                         modelBox.position.y+=10
                     }
@@ -282,11 +506,12 @@
                         model.position.y +=0
                         modelBox.position.y+=0
                     }
-
-                   
+                    if(model.rotation.z<0.4){
+                        model.rotation.z +=0.05;
+                    }
                 }
-                else if(e.key == "s"){
-                    if(model.position.y>=-100 ){
+                else if((e.key == "s" || e.key == "S" ) && moveFunc){
+                    if(model.position.y>=-120 ){
                         model.position.y -=10
                         modelBox.position.y-=10
                     }
@@ -294,32 +519,88 @@
                         model.position.y -=0
                         modelBox.position.y-=0
                     }
+                    if(model.rotation.z >=-0.5){
+                        model.rotation.z -=0.05;  
+                    }
                 }
-            })
-
+                else if((e.key == "a" || e.key == "A")  && moveFunc ){
+                    if(model.position.z>=-250 ){
+                        model.position.z -=10
+                        modelBox.position.z-=10
+                    }
+                    else {
+                        model.position.z -=0
+                        modelBox.position.z-=0
+                    }
+                    if(model.rotation.x>-0.6){
+                        model.rotation.x -=0.05
+                    }
+                }
+                else if((e.key == "d" ||e.key == "D") && moveFunc){
+                    if(model.position.z<=250){
+                        model.position.z +=10
+                        modelBox.position.z+=10
+                    }
+                    else {
+                        model.position.z +=0
+                        modelBox.position.z +=0
+                    }
+                    if(model.rotation.x<0.4){
+                        model.rotation.x +=0.05
+                    }
+                }
+                })
+            }
+            move()
         }
+
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize( window.innerWidth, window.innerHeight );
+        }
+        globalThis.addEventListener("resize", onWindowResize)
 
         function stop() {
             window.cancelAnimationFrame(requestId);
             requestId = undefined;
         } 
 
+        let names, gamername
+        let name = document.getElementById("name");
+        name.value = localStorage.getItem("gamername")
+        name.onclick = function(){
+            name.value = " "
+        }
         function point(){
-            i++;            
-            document.getElementById("cou").innerHTML = "Score" + " "+ i; 
-            document.getElementById("record").innerHTML = "Your record"+ " " + localStorage.getItem("count");
+            i++;     
+            localStorage.setItem("gamername", name.value);
+            document.getElementById("cou").innerHTML = gamername + " "+"Score" + " "+ i; 
+            document.getElementById("record").innerHTML = names + " " + "record" +" " + localStorage.getItem("count");
+            if (name.value == 0){
+                localStorage.setItem("gamername", "Gamer")
+                gamername = `${localStorage.getItem("gamername")}'s`
+            }else{
+                gamername = `${localStorage.getItem("gamername")}'s`
+            }
+            names = `${localStorage.getItem("name")}'s`
             if(localStorage !== undefined && i> localStorage.getItem("count")){
-                localStorage.setItem("count", i)                            
+                localStorage.setItem("count", i) 
+   
+                if(name.value == "input your name" || name.value == "Gamer"){
+                    localStorage.setItem("name", "Your record")
+                } else if(name.value!=0){
+                    localStorage.setItem("name", name.value) 
+                }
+                else{
+                    localStorage.setItem("name", "Your record")
+                }
             } 
-
         }
 
-
-      
-        function render(){
-            point()
-            
-            requestId =  requestAnimationFrame(render);
+        function animate(){
+            requestAnimationFrame(animate);
+            renderer.render(scene,camera);
             var delta = clock.getDelta();
             if (mixer != null) {
                 mixer.update(delta);
@@ -330,52 +611,171 @@
             if (mixer2 != null) {
                 mixer2.update(delta);
             };
-            if(i<1000){
-                cloud.position.x -= 4;
-                modelBox2.position.x -=4;       
-                cloud1.position.x -= 4;
-                modelBox1.position.x -= 4; 
+            if (mixer3 != null) {
+                mixer3.update(delta);
+            };
+            if (mixer4 != null) {
+                mixer4.update(delta);
+            };
+            if (mixer5 != null) {
+                mixer5.update(delta);
+            };
+        }
+
+        function onClicked() {
+            if (sound.isPlaying) sound.stop();
+	        sound.play();
+        }
+ 
+        function render(){
+            point()
+            requestId =  requestAnimationFrame(render);
+            var delta = clock.getDelta();
+            eagle1.traverse(item =>{
+                if(item.isMesh){
+                    item.material.opacity = 1
+                }
+            })
+            eagle2.traverse(item =>{
+                if(item.isMesh){
+                    item.material.opacity = 1
+                }
+            })
+            eagle3.traverse(item =>{
+                if(item.isMesh){
+                    item.material.opacity = 1
+                }
+            })
+            eagle4.traverse(item =>{
+                if(item.isMesh){
+                    item.material.opacity = 1
+                }
+            })
+            eagle5.traverse(item =>{
+                if(item.isMesh){
+                    item.material.opacity = 1
+                }
+            })
+            if (mixer != null) {
+                mixer.update(delta);
+            };
+            if (mixer1 != null) {
+                mixer1.update(delta);
+            };
+            if (mixer2 != null) {
+                mixer2.update(delta);
+            };
+            if (mixer3 != null) {
+                mixer3.update(delta);
+            };
+            if (mixer4 != null) {
+                mixer4.update(delta);
+            };
+            if (mixer5 != null) {
+                mixer5.update(delta);
+            };
+
+            if(i<2000){
+                eagle1.position.x -= 4;
+                eagleBox1.position.x -= 4;       
+                eagle2.position.x -= 4;
+                eagleBox2.position.x -= 4; 
+                eagle3.position.x -= 4;
+                eagleBox3.position.x -= 4;
+                eagle4.position.x -= 4;
+                eagleBox4.position.x -= 4;
+                eagle5.position.x -= 4;
+                eagleBox5.position.x -= 4;
             }
-            else if(i>1000){
-                cloud.position.x -= 6;
-                modelBox2.position.x -= 6;       
-                cloud1.position.x -= 6;
-                modelBox1.position.x -= 6; 
+            else if(i>2000){
+                eagle1.position.x -= 6;
+                eagleBox1.position.x -= 6;       
+                eagle2.position.x -= 6;
+                eagleBox2.position.x -= 6; 
+                eagle3.position.x -= 6;
+                eagleBox3.position.x -= 6;
+                eagle4.position.x -= 6;
+                eagleBox4.position.x -= 6;
+                eagle5.position.x -= 6;
+                eagleBox5.position.x -= 6;
             }
-            else if(i>1800){
-                cloud.position.x -= 8;
-                modelBox2.position.x -=8;       
-                cloud1.position.x -= 8;
-                modelBox1.position.x -= 8; 
-            }
-            else if(i>2500){
-                cloud.position.x -= 10;
-                modelBox2.position.x -=10;       
-                cloud1.position.x -= 10;
-                modelBox1.position.x -= 10; 
+            else if(i>2800){
+                eagle1.position.x -= 8;
+                eagleBox1.position.x -= 8;       
+                eagle2.position.x -= 8;
+                eagleBox2.position.x -= 8; 
+                eagle3.position.x -= 8;
+                eagleBox3.position.x -= 8; 
+                eagle4.position.x -= 8;
+                eagleBox4.position.x -= 8;
+                eagle5.position.x -= 8;
+                eagleBox5.position.x -= 8;
             }
             else if(i>3500){
-                cloud.position.x -= 12;
-                modelBox2.position.x -=12;       
-                cloud1.position.x -= 12;
-                modelBox1.position.x -= 12; 
+                eagle1.position.x -= 10;
+                eagleBox1.position.x -= 10;       
+                eagle2.position.x -= 10;
+                eagleBox2.position.x -= 10; 
+                eagle3.position.x -= 10;
+                eagleBox3.position.x -= 10; 
+                eagle4.position.x -= 10;
+                eagleBox4.position.x -= 10;
+                eagle5.position.x -= 10;
+                eagleBox5.position.x -= 10;
+            }
+            else if(i>4500){
+                eagle1.position.x -= 12;
+                eagleBox1.position.x -= 12;       
+                eagle2.position.x -= 12;
+                eagleBox2.position.x -= 12; 
+                eagle3.position.x -= 12;
+                eagleBox3.position.x -= 12; 
+                eagle4.position.x -= 12;
+                eagleBox4.position.x -= 12;
+                eagle5.position.x -= 12;
+                eagleBox5.position.x -= 12;
+            }
+            else if(i>5500){
+                eagle1.position.x -= 18;
+                eagleBox1.position.x -= 18;       
+                eagle2.position.x -= 18;
+                eagleBox2.position.x -= 18; 
+                eagle3.position.x -= 18;
+                eagleBox3.position.x -= 18; 
+                eagle4.position.x -= 18;
+                eagleBox4.position.x -= 18;
+                eagle5.position.x -= 18;
+                eagleBox5.position.x -= 18;
+            }
+            else if(i>6500){
+                eagle1.position.x -= 20;
+                eagleBox1.position.x -= 20;       
+                eagle2.position.x -= 20;
+                eagleBox2.position.x -= 20; 
+                eagle3.position.x -= 20;
+                eagleBox3.position.x -= 20; 
+                eagle4.position.x -= 20;
+                eagleBox4.position.x -= 20;
+                eagle5.position.x -= 20;
+                eagleBox5.position.x -= 20;
             }
             mesh.position.x -= 4;
             if(mesh.position.x < -1000){
                 mesh.position.x=-100
             }
-
-
-            secondBB = new THREE.Box3().setFromObject(modelBox2);
-            thirdBB = new THREE.Box3().setFromObject(modelBox1);
-            firstBB = new THREE.Box3().setFromObject(modelBox);
-            collision = firstBB.isIntersectionBox(secondBB);
-            collision1 = firstBB.isIntersectionBox(thirdBB);          
+            secondBB = new THREE.Box3().setFromObject(eagleBox1);
+            thirdBB = new THREE.Box3().setFromObject(eagleBox2);
+            fourBB = new THREE.Box3().setFromObject(eagleBox3);
+            fifthBB = new THREE.Box3().setFromObject(eagleBox4);
+            sixthBB = new THREE.Box3().setFromObject(eagleBox5);
+            firstBB = new THREE.Box3().setFromObject(modelBox);            
+            collision = firstBB.intersectsBox(secondBB);
+            collision1 = firstBB.intersectsBox(thirdBB);   
+            collision2 = firstBB.intersectsBox(fourBB); 
+            collision3 = firstBB.intersectsBox(fifthBB);  
+            collision4 = firstBB.intersectsBox(sixthBB);      
             renderer.render(scene,camera);
-
- 
         }
     </script>
-    
 </body>
 </html>
