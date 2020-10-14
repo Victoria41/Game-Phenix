@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>3D Phoenix</title>
@@ -87,7 +86,7 @@
             document.location.reload(true)
         }
 
-        setInterval(function(n){ 
+        setInterval(function Call(){ 
             if(collision1||collision || collision2 ||collision3 ||collision4){
                 moveFunc = false
                 clearInterval(setInt1)
@@ -113,7 +112,7 @@
                 volume.style.display = "block"
             }
   
-        }, 100);
+        }, 10);
         
         import * as THREE from '../../build/three.module.js';
         import {GLTFLoader} from './GLTFLoader.js';
