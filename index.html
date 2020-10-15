@@ -385,7 +385,7 @@
                 eagle1.position.set(600,model.position.y,model.position.z);
                 scene.add(eagle1);
                 eagleBox1.position.set(600,model.position.y,model.position.z);                
-            },Math.ceil(Math.random()*4+3)*1000)
+            },Math.ceil(Math.random()*4+5)*1000)
 
             setInt2 = setInterval(function(){
                 let y1 = Math.floor(Math.random()*100);
@@ -399,7 +399,7 @@
                 eagle2.position.set(500,y1,z1);
                 eagleBox2.position.set(500,y1,z1);
                 scene.add(eagle2);
-            },Math.ceil(Math.random()*4+4)*1000)
+            },Math.ceil(Math.random()*4+5)*1000)
             
             setInt3 = setInterval(function(){
                 let y2 = Math.floor(Math.random()*100);
@@ -413,7 +413,7 @@
                 eagle3.position.set(600,y2,z2);
                 scene.add(eagle3);
                 eagleBox3.position.set(600,y2+40,z2);                
-            },Math.ceil(Math.random()*4+4)*1000)
+            },Math.ceil(Math.random()*4+5)*1000)
 
             setInt4 = setInterval(function(){
                 let y3 = Math.floor(Math.random()*100);
@@ -427,7 +427,7 @@
                 eagle4.position.set(600,y3,z3);
                 scene.add(eagle4);
                 eagleBox4.position.set(600,y3+40,z3);  
-            },Math.ceil(Math.random()*4+4)*1000)
+            },Math.ceil(Math.random()*4+5)*1000)
 
             setInt5 = setInterval(function(){
                 if(i>1000){
@@ -443,7 +443,7 @@
                 scene.add(eagle5);
                 eagleBox5.position.set(600,y4+40,z4);  
                 }
-            },Math.ceil(Math.random()*4+4)*1000)
+            },Math.ceil(Math.random()*4+5)*1000)
             globalThis.addEventListener('touchstart', (event) => {
                 if( parseInt(event.changedTouches[0].clientX) < parseInt(screen.width/3) && parseInt(event.changedTouches[0].clientY) < parseInt(screen.height/3)){
                     if(model.position.y<=100 && moveFunc){
