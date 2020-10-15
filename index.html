@@ -26,19 +26,7 @@
             <div id="song4">The king</div>
         </div>
     </div>
-    
-    <div class="updown">
-        <div>
-            <img src="buttons/up.png" id="up">
-        </div>
-        <div class="rightleft">
-            <img src="buttons/left.png" id="left">
-            <img src="buttons/right.png" id="right">
-        </div>
-        <div>
-            <img src="buttons/down.png" id="down">
-        </div>
-    </div>
+
     <div id="wsad">
         <div class="keypr" id="w">W</div>
         <div>
@@ -86,7 +74,7 @@
             document.location.reload(true)
         }
 
-        setInterval(function Call(){ 
+        setInterval(function (n){ 
             if(collision1||collision || collision2 ||collision3 ||collision4){
                 moveFunc = false
                 clearInterval(setInt1)
@@ -112,7 +100,7 @@
                 volume.style.display = "block"
             }
   
-        }, 10);
+        }, 100);
         
         import * as THREE from '../../build/three.module.js';
         import {GLTFLoader} from './GLTFLoader.js';
@@ -122,6 +110,8 @@
         fog, eagle1,eagle2,eagle3, eagle4,eagle5, modelBox, eagleBox1, eagleBox2, eagleBox3,eagleBox4,eagleBox5, 
         firstBB,secondBB,thirdBB,fourBB,fifthBB,sixthBB, mesh, setInt1, setInt2,setInt3, setInt4,setInt5,
         sound1,sound2, audioLoader,wsad, childW;
+        let startcall = false;
+
         
         init();
         animate();
@@ -230,20 +220,24 @@
                 soundoff.style.display = "block";
                 soundon.style.display = "none";
             }
-
-            let startButton = document.getElementById( 'startButton' );
+            // let startButton = document.getElementById( 'startButton' );
+            // setTimeout(function(){startButton.style.display = "block";
+            // name.style.display = "block"
+            // },1000)
 			startButton.addEventListener( 'click', function () {
-                document.getElementById("cursor").style.display = "none"
-                document.getElementById("finger").style.display = "none"
-                moveFunc = true
-                onClicked();
-                render();
-                startButton.style.display = "none";
-                name.style.display = "none"
-                wsad = document.getElementById("wsad");
-                childW = document.createElement("style")
-                childW.innerHTML = ".keypr{animation-name: key;animation-duration: 3s;}@keyframes key{from{opacity: 1; display: block}to{opacity: 0;display: none}}"
-                wsad.appendChild(childW)
+                if(startcall == true ){
+                    document.getElementById("cursor").style.display = "none"
+                    document.getElementById("finger").style.display = "none"
+                    moveFunc = true
+                    onClicked();
+                    render();
+                    startButton.style.display = "none";
+                    name.style.display = "none"
+                    wsad = document.getElementById("wsad");
+                    childW = document.createElement("style")
+                    childW.innerHTML = ".keypr{animation-name: key;animation-duration: 3s;}@keyframes key{from{opacity: 1; display: block}to{opacity: 0;display: none}}"
+                    wsad.appendChild(childW)
+                }
 			});
 
             mixer = null;
@@ -256,8 +250,17 @@
                 model.scale.set(0.1,0.1,0.1);
                 mixer = new THREE.AnimationMixer(model);
                 mixer.clipAction(glb.animations[0]).play();
-                scene.add(model);           
-            })
+                scene.add(model);  
+            },
+            function ( xhr ) {
+                if(( xhr.loaded / xhr.total * 100 )==100){
+                    startcall = true
+                }               
+            },
+            function ( error ) {
+                console.log( 'An error happened' );                        
+            }
+            ); 
 
             modelBox = new THREE.Mesh(new THREE.BoxGeometry(60,40,60), new THREE.MeshStandardMaterial( { color: 0xffff00 } ))
             modelBox.position.needsUpdate = true;
@@ -442,51 +445,155 @@
                 }
             },Math.ceil(Math.random()*4+4)*1000)
 
-            let down = document.getElementById("down");
-            down.onclick = function(){
-                if(model.position.y>=-100 ){
-                    model.position.y -=10
-                    modelBox.position.y-=10
+            globalThis.onclick = function(e){
+                if( parseInt(e.x) < parseInt(screen.width/3) && parseInt(e.y) < parseInt(screen.height/3)){
+                    if(model.position.y<=100 && moveFunc){
+                    model.position.y +=8
+                    modelBox.position.y+=8
+                    }
+                    else {
+                        model.position.y +=0
+                        modelBox.position.y+=0
+                    }
+                    if(model.position.z>=-250 && moveFunc){
+                        model.position.z -=8
+                        modelBox.position.z-=8
+                    }
+                    else {
+                        model.position.z -=0
+                        modelBox.position.z-=0
+                    }
+                    if(model.rotation.z<0.4 && moveFunc){
+                        model.rotation.z +=0.05;
+                    }
+                    if(model.rotation.x>-0.6 && moveFunc){
+                        model.rotation.x -=0.05
+                    }
                 }
-                else {
-                    model.position.y -=0
-                    modelBox.position.y-=0
-                }
-            }
-
-            let up = document.getElementById("up");
-            up.onclick = function(){
-                if(model.position.y<=100 ){
+                else if( parseInt(e.x) > parseInt(screen.width/3) && parseInt(e.x) < parseInt(2*screen.width/3)  && parseInt(e.y) < parseInt(screen.height/3)){
+                    console.log(e.x,e.y)
+                    if(model.position.y<=100 && moveFunc){
                     model.position.y +=10
                     modelBox.position.y+=10
+                    }
+                    else {
+                        model.position.y +=0
+                        modelBox.position.y+=0
+                    }
+                    if(model.rotation.z<0.4 && moveFunc){
+                        model.rotation.z +=0.05;
+                    }
+                }
+                else if(parseInt(e.x) > parseInt(2*screen.width/3) && parseInt(e.y) < parseInt(screen.height/3)){
+                    if(model.position.y<=100 && moveFunc){
+                        model.position.y +=8
+                        modelBox.position.y+=8
+                    }
+                    else {
+                        model.position.y +=0
+                        modelBox.position.y+=0
+                    }
+                    if(model.rotation.z<0.4 && moveFunc){
+                        model.rotation.z +=0.05;
+                    }  
+                    if(model.position.z<=250 && moveFunc){
+                        model.position.z +=8
+                        modelBox.position.z+=8
+                    }
+                    else {
+                        model.position.z +=0
+                        modelBox.position.z +=0
+                    }
+                    if(model.rotation.x<0.4 && moveFunc){
+                        model.rotation.x +=0.05
+                    }
+                }
+                else if(parseInt(e.x) < parseInt(screen.width/2) && parseInt(e.y) < parseInt(2*screen.height/3)){
+                    if(model.position.z>=-250 && moveFunc){
+                        model.position.z -=10
+                        modelBox.position.z-=10
+                    }
+                    else {
+                        model.position.z -=0
+                        modelBox.position.z-=0
+                    }
+                    if(model.rotation.x>-0.6 && moveFunc){
+                        model.rotation.x -=0.05
+                    }
+                }
+                else if(parseInt(e.x) > parseInt(screen.width/2) && parseInt(e.y) < parseInt(2*screen.height/3)){
+                    if(model.position.z<=250 && moveFunc){
+                        model.position.z +=10
+                        modelBox.position.z+=10
+                    }
+                    else {
+                        model.position.z +=0
+                        modelBox.position.z +=0
+                    }
+                    if(model.rotation.x<0.4 && moveFunc){
+                        model.rotation.x +=0.05
+                    }
+                }
+                else if(parseInt(e.x) < parseInt(screen.width/3) && parseInt(e.y) > parseInt(2*screen.height/3)){
+                    if(model.position.z>=-250 && moveFunc){
+                        model.position.z -=8
+                        modelBox.position.z-=8
+                    }
+                    else {
+                        model.position.z -=0
+                        modelBox.position.z-=0
+                    }
+                    if(model.rotation.x>-0.6 && moveFunc){
+                        model.rotation.x -=0.05
+                    }
+                    if(model.position.y>=-100 && moveFunc){
+                        model.position.y -=8
+                        modelBox.position.y-=8
+                    }
+                    else {
+                        model.position.y -=0
+                        modelBox.position.y-=0
+                    }
+                    if(model.rotation.z >=-0.5 && moveFunc){
+                        model.rotation.z -=0.05;  
+                    }
+                }
+                else if(parseInt(e.x) > parseInt(screen.width/3) && parseInt(e.x) < parseInt(2*screen.width/3)  && parseInt(e.y) > parseInt(2*screen.height/3)){
+                    if(model.position.y>=-100 && moveFunc){
+                    model.position.y -=10
+                    modelBox.position.y-=10
+                    }
+                    else {
+                        model.position.y -=0
+                        modelBox.position.y-=0
+                    }
+                    if(model.rotation.z >=-0.5 && moveFunc){
+                        model.rotation.z -=0.05;  
+                    }
                 }
                 else {
-                    model.position.y +=0
-                    modelBox.position.y+=0
-                }
-            }
-
-            let right = document.getElementById("right");
-            right.onclick= function(){
-                if(model.position.z<=150){
-                    model.position.z +=10
-                    modelBox.position.z+=10
-                }
-                else {
-                    model.position.z +=0
-                    modelBox.position.z +=0
-                }
-            }
-
-            let left = document.getElementById("left")
-            left.onclick = function(){
-                if(model.position.z>=-150 ){
-                    model.position.z -=10
-                    modelBox.position.z-=10
-                }
-                else {
-                    model.position.z -=0
-                    modelBox.position.z-=0
+                    if(model.position.z<=250 && moveFunc){
+                        model.position.z +=8
+                        modelBox.position.z+=8
+                    }
+                    else {
+                        model.position.z +=0
+                        modelBox.position.z +=0
+                    }
+                    if(model.rotation.x<0.4 && moveFunc){
+                        model.rotation.x +=0.05
+                    }
+                    if(model.position.y>=-100 && moveFunc){
+                        model.position.y -=8
+                        modelBox.position.y-=8
+                    }
+                    else {
+                        model.position.y -=0
+                        modelBox.position.y-=0
+                    }
+                    if(model.rotation.z >=-0.5 && moveFunc){
+                        model.rotation.z -=0.05;  
+                    }
                 }
             }
 
@@ -626,31 +733,41 @@
             point()
             requestId =  requestAnimationFrame(render);
             var delta = clock.getDelta();
-            eagle1.traverse(item =>{
+            if(eagle1!= undefined){
+                eagle1.traverse(item =>{
                 if(item.isMesh){
                     item.material.opacity = 1
                 }
             })
+            }
+            if(eagle2!= undefined){
             eagle2.traverse(item =>{
                 if(item.isMesh){
                     item.material.opacity = 1
                 }
             })
+            }
+            if(eagle3!= undefined){
             eagle3.traverse(item =>{
                 if(item.isMesh){
                     item.material.opacity = 1
                 }
             })
+            }
+            if(eagle4!= undefined){
             eagle4.traverse(item =>{
                 if(item.isMesh){
                     item.material.opacity = 1
                 }
             })
+            }
+            if(eagle5!= undefined){
             eagle5.traverse(item =>{
                 if(item.isMesh){
                     item.material.opacity = 1
                 }
             })
+            }
             if (mixer != null) {
                 mixer.update(delta);
             };
@@ -671,16 +788,26 @@
             };
 
             if(i<2000){
-                eagle1.position.x -= 4;
-                eagleBox1.position.x -= 4;       
-                eagle2.position.x -= 4;
-                eagleBox2.position.x -= 4; 
-                eagle3.position.x -= 4;
-                eagleBox3.position.x -= 4;
-                eagle4.position.x -= 4;
-                eagleBox4.position.x -= 4;
-                eagle5.position.x -= 4;
-                eagleBox5.position.x -= 4;
+                if(eagle1!= undefined){
+                    eagle1.position.x -= 4;
+                    eagleBox1.position.x -= 4; 
+                } 
+                if(eagle2!= undefined){
+                    eagle2.position.x -= 4;
+                    eagleBox2.position.x -= 4; 
+                }
+                if(eagle3!= undefined){
+                    eagle3.position.x -= 4;
+                    eagleBox3.position.x -= 4;
+                }
+                if(eagle4!= undefined){
+                    eagle4.position.x -= 4;
+                    eagleBox4.position.x -= 4;
+                }
+                if(eagle5!= undefined){
+                    eagle5.position.x -= 4;
+                    eagleBox5.position.x -= 4;
+                }
             }
             else if(i>2000){
                 eagle1.position.x -= 6;
