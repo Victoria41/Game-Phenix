@@ -223,7 +223,6 @@
             let startButton = document.getElementById( 'startButton' );
 			startButton.addEventListener( 'click', function () {
                 console.log("SSSSSSSSSSSSSSSS",startcall)
-                if(startcall == true){
                     document.getElementById("cursor").style.display = "none"
                     document.getElementById("finger").style.display = "none"
                     moveFunc = true
@@ -235,7 +234,6 @@
                     childW = document.createElement("style")
                     childW.innerHTML = ".keypr{animation-name: key;animation-duration: 3s;}@keyframes key{from{opacity: 1; display: block}to{opacity: 0;display: none}}"
                     wsad.appendChild(childW)
-                }
 			});
 
             mixer = null;
@@ -506,7 +504,6 @@
                     }
                 }
                 else if(parseInt(event.changedTouches[0].clientX) < parseInt(screen.width/2) && parseInt(event.changedTouches[0].clientY) < parseInt(2*screen.height/3)){
-                    console.log(screen.width, model.position.z)
                     if(model.position.z>=-screen.width/5 && moveFunc){
                         model.position.z -=10
                         modelBox.position.z-=10
