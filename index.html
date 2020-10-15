@@ -454,7 +454,7 @@
                         model.position.y +=0
                         modelBox.position.y+=0
                     }
-                    if(model.position.z>=-250 && moveFunc){
+                    if(model.position.z>=-screen.width/5 && moveFunc){
                         model.position.z -=8
                         modelBox.position.z-=8
                     }
@@ -494,7 +494,7 @@
                     if(model.rotation.z<0.4 && moveFunc){
                         model.rotation.z +=0.05;
                     }  
-                    if(model.position.z<=250 && moveFunc){
+                    if(model.position.z<=screen.width/5 && moveFunc){
                         model.position.z +=8
                         modelBox.position.z+=8
                     }
@@ -507,7 +507,8 @@
                     }
                 }
                 else if(parseInt(event.changedTouches[0].clientX) < parseInt(screen.width/2) && parseInt(event.changedTouches[0].clientY) < parseInt(2*screen.height/3)){
-                    if(model.position.z>=-250 && moveFunc){
+                    console.log(screen.width, model.position.z)
+                    if(model.position.z>=-screen.width/5 && moveFunc){
                         model.position.z -=10
                         modelBox.position.z-=10
                     }
@@ -520,7 +521,7 @@
                     }
                 }
                 else if(parseInt(event.changedTouches[0].clientX) > parseInt(screen.width/2) && parseInt(event.changedTouches[0].clientY) < parseInt(2*screen.height/3)){
-                    if(model.position.z<=250 && moveFunc){
+                    if(model.position.z<=screen.width/5 && moveFunc){
                         model.position.z +=10
                         modelBox.position.z+=10
                     }
@@ -533,7 +534,7 @@
                     }
                 }
                 else if(parseInt(event.changedTouches[0].clientX) < parseInt(screen.width/3) && parseInt(event.changedTouches[0].clientY) > parseInt(2*screen.height/3)){
-                    if(model.position.z>=-250 && moveFunc){
+                    if(model.position.z>=-screen.width/5 && moveFunc){
                         model.position.z -=8
                         modelBox.position.z-=8
                     }
@@ -570,7 +571,7 @@
                     }
                 }
                 else {
-                    if(model.position.z<=250 && moveFunc){
+                    if(model.position.z<=screen.width/5 && moveFunc){
                         model.position.z +=8
                         modelBox.position.z+=8
                     }
