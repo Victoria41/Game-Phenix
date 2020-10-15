@@ -222,18 +222,19 @@
             }
             let startButton = document.getElementById( 'startButton' );
 			startButton.addEventListener( 'click', function () {
-                console.log("aaaaaaaaaa")
-                document.getElementById("cursor").style.display = "none"
-                document.getElementById("finger").style.display = "none"
-                moveFunc = true
-                onClicked();
-                render();
-                startButton.style.display = "none";
-                name.style.display = "none"
-                wsad = document.getElementById("wsad");
-                childW = document.createElement("style")
-                childW.innerHTML = ".keypr{animation-name: key;animation-duration: 3s;}@keyframes key{from{opacity: 1; display: block}to{opacity: 0;display: none}}"
-                wsad.appendChild(childW)
+                if(startcall == true){
+                    document.getElementById("cursor").style.display = "none"
+                    document.getElementById("finger").style.display = "none"
+                    moveFunc = true
+                    onClicked();
+                    render();
+                    startButton.style.display = "none";
+                    name.style.display = "none"
+                    wsad = document.getElementById("wsad");
+                    childW = document.createElement("style")
+                    childW.innerHTML = ".keypr{animation-name: key;animation-duration: 3s;}@keyframes key{from{opacity: 1; display: block}to{opacity: 0;display: none}}"
+                    wsad.appendChild(childW)
+                }
 			});
 
             mixer = null;
@@ -440,9 +441,8 @@
                 eagleBox5.position.set(600,y4+40,z4);  
                 }
             },Math.ceil(Math.random()*4+4)*1000)
-
-            globalThis.onclick = function(e){
-                if( parseInt(e.x) < parseInt(screen.width/3) && parseInt(e.y) < parseInt(screen.height/3)){
+            globalThis.addEventListener('touchstart', (event) => {
+                if( parseInt(event.changedTouches[0].clientX) < parseInt(screen.width/3) && parseInt(event.changedTouches[0].clientY) < parseInt(screen.height/3)){
                     if(model.position.y<=100 && moveFunc){
                     model.position.y +=8
                     modelBox.position.y+=8
@@ -466,7 +466,7 @@
                         model.rotation.x -=0.05
                     }
                 }
-                else if( parseInt(e.x) > parseInt(screen.width/3) && parseInt(e.x) < parseInt(2*screen.width/3)  && parseInt(e.y) < parseInt(screen.height/3)){
+                else if( parseInt(event.changedTouches[0].clientX) > parseInt(screen.width/3) && parseInt(event.changedTouches[0].clientX) < parseInt(2*screen.width/3)  && parseInt(event.changedTouches[0].clientY) < parseInt(screen.height/3)){
                     if(model.position.y<=100 && moveFunc){
                         model.position.y +=10
                         modelBox.position.y+=10
@@ -479,7 +479,7 @@
                         model.rotation.z +=0.05;
                     }
                 }
-                else if(parseInt(e.x) > parseInt(2*screen.width/3) && parseInt(e.y) < parseInt(screen.height/3)){
+                else if(parseInt(event.changedTouches[0].clientX) > parseInt(2*screen.width/3) && parseInt(event.changedTouches[0].clientY) < parseInt(screen.height/3)){
                     if(model.position.y<=100 && moveFunc){
                         model.position.y +=8
                         modelBox.position.y+=8
@@ -503,7 +503,7 @@
                         model.rotation.x +=0.05
                     }
                 }
-                else if(parseInt(e.x) < parseInt(screen.width/2) && parseInt(e.y) < parseInt(2*screen.height/3)){
+                else if(parseInt(event.changedTouches[0].clientX) < parseInt(screen.width/2) && parseInt(event.changedTouches[0].clientY) < parseInt(2*screen.height/3)){
                     if(model.position.z>=-250 && moveFunc){
                         model.position.z -=10
                         modelBox.position.z-=10
@@ -516,7 +516,7 @@
                         model.rotation.x -=0.05
                     }
                 }
-                else if(parseInt(e.x) > parseInt(screen.width/2) && parseInt(e.y) < parseInt(2*screen.height/3)){
+                else if(parseInt(event.changedTouches[0].clientX) > parseInt(screen.width/2) && parseInt(event.changedTouches[0].clientY) < parseInt(2*screen.height/3)){
                     if(model.position.z<=250 && moveFunc){
                         model.position.z +=10
                         modelBox.position.z+=10
@@ -529,7 +529,7 @@
                         model.rotation.x +=0.05
                     }
                 }
-                else if(parseInt(e.x) < parseInt(screen.width/3) && parseInt(e.y) > parseInt(2*screen.height/3)){
+                else if(parseInt(event.changedTouches[0].clientX) < parseInt(screen.width/3) && parseInt(event.changedTouches[0].clientY) > parseInt(2*screen.height/3)){
                     if(model.position.z>=-250 && moveFunc){
                         model.position.z -=8
                         modelBox.position.z-=8
@@ -553,7 +553,157 @@
                         model.rotation.z -=0.05;  
                     }
                 }
-                else if(parseInt(e.x) > parseInt(screen.width/3) && parseInt(e.x) < parseInt(2*screen.width/3)  && parseInt(e.y) > parseInt(2*screen.height/3)){
+                else if(parseInt(event.changedTouches[0].clientX) > parseInt(screen.width/3) && parseInt(event.changedTouches[0].clientX) < parseInt(2*screen.width/3)  && parseInt(event.changedTouches[0].clientY) > parseInt(2*screen.height/3)){
+                    if(model.position.y>=-100 && moveFunc){
+                    model.position.y -=10
+                    modelBox.position.y-=10
+                    }
+                    else {
+                        model.position.y -=0
+                        modelBox.position.y-=0
+                    }
+                    if(model.rotation.z >=-0.5 && moveFunc){
+                        model.rotation.z -=0.05;  
+                    }
+                }
+                else {
+                    if(model.position.z<=250 && moveFunc){
+                        model.position.z +=8
+                        modelBox.position.z+=8
+                    }
+                    else {
+                        model.position.z +=0
+                        modelBox.position.z +=0
+                    }
+                    if(model.rotation.x<0.4 && moveFunc){
+                        model.rotation.x +=0.05
+                    }
+                    if(model.position.y>=-100 && moveFunc){
+                        model.position.y -=8
+                        modelBox.position.y-=8
+                    }
+                    else {
+                        model.position.y -=0
+                        modelBox.position.y-=0
+                    }
+                    if(model.rotation.z >=-0.5 && moveFunc){
+                        model.rotation.z -=0.05;  
+                    }
+                }
+            })
+            globalThis.onclick = function(e){
+                if( parseInt(event.changedTouches[0].clientX) < parseInt(screen.width/3) && parseInt(event.changedTouches[0].clientY) < parseInt(screen.height/3)){
+                    if(model.position.y<=100 && moveFunc){
+                    model.position.y +=8
+                    modelBox.position.y+=8
+                    }
+                    else {
+                        model.position.y +=0
+                        modelBox.position.y+=0
+                    }
+                    if(model.position.z>=-250 && moveFunc){
+                        model.position.z -=8
+                        modelBox.position.z-=8
+                    }
+                    else {
+                        model.position.z -=0
+                        modelBox.position.z-=0
+                    }
+                    if(model.rotation.z<0.4 && moveFunc){
+                        model.rotation.z +=0.05;
+                    }
+                    if(model.rotation.x>-0.6 && moveFunc){
+                        model.rotation.x -=0.05
+                    }
+                }
+                else if( parseInt(event.changedTouches[0].clientX) > parseInt(screen.width/3) && parseInt(event.changedTouches[0].clientY) < parseInt(2*screen.width/3)  && parseInt(event.changedTouches[0].clientY) < parseInt(screen.height/3)){
+                    if(model.position.y<=100 && moveFunc){
+                        model.position.y +=10
+                        modelBox.position.y+=10
+                    }
+                    else {
+                        model.position.y +=0
+                        modelBox.position.y+=0
+                    }
+                    if(model.rotation.z<0.4 && moveFunc){
+                        model.rotation.z +=0.05;
+                    }
+                }
+                else if(parseInt(event.changedTouches[0].clientX) > parseInt(2*screen.width/3) && parseInt(event.changedTouches[0].clientY) < parseInt(screen.height/3)){
+                    if(model.position.y<=100 && moveFunc){
+                        model.position.y +=8
+                        modelBox.position.y+=8
+                    }
+                    else {
+                        model.position.y +=0
+                        modelBox.position.y+=0
+                    }
+                    if(model.rotation.z<0.4 && moveFunc){
+                        model.rotation.z +=0.05;
+                    }  
+                    if(model.position.z<=250 && moveFunc){
+                        model.position.z +=8
+                        modelBox.position.z+=8
+                    }
+                    else {
+                        model.position.z +=0
+                        modelBox.position.z +=0
+                    }
+                    if(model.rotation.x<0.4 && moveFunc){
+                        model.rotation.x +=0.05
+                    }
+                }
+                else if(parseInt(event.changedTouches[0].clientX) < parseInt(screen.width/2) && parseInt(event.changedTouches[0].clientY) < parseInt(2*screen.height/3)){
+                    if(model.position.z>=-250 && moveFunc){
+                        model.position.z -=10
+                        modelBox.position.z-=10
+                    }
+                    else {
+                        model.position.z -=0
+                        modelBox.position.z-=0
+                    }
+                    if(model.rotation.x>-0.6 && moveFunc){
+                        model.rotation.x -=0.05
+                    }
+                }
+                else if(parseInt(event.changedTouches[0].clientX) > parseInt(screen.width/2) && parseInt(event.changedTouches[0].clientY) < parseInt(2*screen.height/3)){
+                    if(model.position.z<=250 && moveFunc){
+                        model.position.z +=10
+                        modelBox.position.z+=10
+                    }
+                    else {
+                        model.position.z +=0
+                        modelBox.position.z +=0
+                    }
+                    if(model.rotation.x<0.4 && moveFunc){
+                        model.rotation.x +=0.05
+                    }
+                }
+                else if(parseInt(event.changedTouches[0].clientX) < parseInt(screen.width/3) && parseInt(event.changedTouches[0].clientY) > parseInt(2*screen.height/3)){
+                    if(model.position.z>=-250 && moveFunc){
+                        model.position.z -=8
+                        modelBox.position.z-=8
+                    }
+                    else {
+                        model.position.z -=0
+                        modelBox.position.z-=0
+                    }
+                    if(model.rotation.x>-0.6 && moveFunc){
+                        model.rotation.x -=0.05
+                    }
+                    if(model.position.y>=-100 && moveFunc){
+                        model.position.y -=8
+                        modelBox.position.y-=8
+                    }
+                    else {
+                        model.position.y -=0
+                        modelBox.position.y-=0
+                    }
+                    if(model.rotation.z >=-0.5 && moveFunc){
+                        model.rotation.z -=0.05;  
+                    }
+                }
+                else if(parseInt(event.changedTouches[0].clientX) > parseInt(screen.width/3) && parseInt(event.changedTouches[0].clientX) < parseInt(2*screen.width/3)  && parseInt(event.changedTouches[0].clientY) > parseInt(2*screen.height/3)){
                     if(model.position.y>=-100 && moveFunc){
                     model.position.y -=10
                     modelBox.position.y-=10
