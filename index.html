@@ -131,7 +131,7 @@
             document.body.appendChild(renderer.domElement);
             let controls = new OrbitControls( camera, renderer.domElement );
             controls.minDistance = 100;
-            controls.maxDistance = 300000;
+            controls.maxDistance = 3000;
             let distance = camera.position.distanceTo( controls);
             //light
             let light = new THREE.HemisphereLight( 0xeeeeff, 0x777788, 0.75 );
@@ -223,8 +223,7 @@
             let startButton = document.getElementById( 'startButton' );
 			startButton.addEventListener( 'click', function () {
                 console.log("SSSSSSSSSSSSSSSS",startcall)
-                
-                    console.log("ssssssssss")
+                if(startcall == true){
                     document.getElementById("cursor").style.display = "none"
                     document.getElementById("finger").style.display = "none"
                     moveFunc = true
@@ -236,7 +235,7 @@
                     childW = document.createElement("style")
                     childW.innerHTML = ".keypr{animation-name: key;animation-duration: 3s;}@keyframes key{from{opacity: 1; display: block}to{opacity: 0;display: none}}"
                     wsad.appendChild(childW)
-                
+                }
 			});
 
             mixer = null;
