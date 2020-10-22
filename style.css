@@ -90,8 +90,36 @@
 }
 #finger img {
     width: 20px;
-
-
+}
+#overlay img{
+    position: absolute;
+    width: 0px;
+    top: calc(50% - 30px);
+    display: none;
+}
+#space{
+    position: absolute;
+    top: 90%;
+    left: 150px;
+    width: 200px;
+}
+#birddiv{
+    position: absolute;
+    right: 4%;
+    top: 95px;
+    display: none;
+}
+#birddiv img{
+    width: 20px;
+    margin-right: 10px;
+}
+#bird{
+    display: none;
+    position: absolute;
+    right: 2%;
+    top: 95px;
+    font-size: 18px;
+    color: silver;
 }
 
 @keyframes move{
@@ -163,17 +191,47 @@
     font-size: 20px;
     color:silver;
     width: 98%;
+    margin-top: 20px;
     display: flex;
     justify-content: flex-end;    
 }
+#cou500{
+    position: absolute;
+    font-size: 24px;
+    color:rgb(224, 205, 205);
+    width: 98%;
+    opacity: 0;
+    display: flex;
+    justify-content: flex-end; 
+
+}
+
 #record{
     position: absolute;
-    margin-top: 20px;
+    margin-top: 40px;
     font-size: 20px;
     color: silver;
     width: 98%;
     display: flex;
     justify-content: flex-end;
+}
+#fire{
+    position: absolute;
+    right: 4%;
+    top: 70px;
+    display: none;
+}
+#fire img{
+    width: 25px;
+    margin-right: 10px;
+}
+#firecount{
+    position: absolute;
+    right: 2%;
+    top: 75px;
+    font-size: 18px;
+    color: silver;
+    display: none;
 }
 #overlay{
     display: flex;
@@ -181,6 +239,7 @@
     width: 100%;
     height: 100%;
 }
+
 #startButton{
     background-color: rgb(48, 29, 85,0.8);
     border-radius: 5%;
@@ -193,6 +252,7 @@
     z-index: 2;
     opacity: 1;
     animation: start 2s;
+    display: none;
 }
 @keyframes start{
     from{opacity: 0}
@@ -210,6 +270,7 @@
     color: rgb(192,192,192,0.8);
     opacity: 1;
     animation: start 2s;
+    display: none;
 }
 #grid{
     display: grid;
@@ -227,6 +288,15 @@
 @media only screen and (max-width: 1024px) {
     .keypr {
         display: none;
+    }
+    #overlay img{
+        position: absolute;
+        width: 70px;
+        top: calc(50% - 30px);
+        display: none;
+    }
+    #fire img{
+        width: 25px;
     }
 }
 
@@ -282,7 +352,14 @@
     #cou{
         font-size: 16px;
     }
+
     #record{
+        font-size: 16px;
+    }
+    #firecount{
+        font-size: 16px;
+    }
+    #bird{
         font-size: 16px;
     }
     .modal-content{
@@ -297,6 +374,12 @@
     }
     .updown{
         display: block;
+    }
+    #overlay img{
+        position: absolute;
+        width: 70px;
+        top: calc(50% - 30px);
+        display: none;
     }
 }
 
@@ -328,6 +411,18 @@
     #finger{
         display: block;
     }
+    #overlay img{
+        position: absolute;
+        width: 70px;
+        top: calc(50% - 30px);
+        display: none;
+    }
+    #firecount{
+        font-size: 16px;
+    }
+    #bird{
+        font-size: 16px;
+    }
 }
 
 @media only screen and (max-width:500px){
@@ -343,5 +438,17 @@
     }
     .updown{
         display: block;
+    }
+    #overlay img{
+        position: absolute;
+        width: 70px;
+        top: calc(50% - 30px);
+        display: none;
+    }
+    #firecount{
+        font-size: 16px;
+    }
+    #bird{
+        font-size: 16px;
     }
 }

@@ -11,7 +11,9 @@
     <div id="overlay">
         <button id="startButton">Start</button>
         <input type="text" id="name">
+        <img src="buttons/icons8-сенсорный-смартфон-16.png" id="center">
     </div>
+
     <div id="forsound">
         <img src="music/mute.png" id="sound">
         <img src="music/sound-on.png" id="sound-on">
@@ -34,10 +36,10 @@
             <div class="keypr" id="d">D</div>
         </div>
         <div class="keypr" id="s">S</div>
+        <div class="keypr" id="space">Space</div>
     </div>
     <div id="cursor">
-        <img src="buttons/cursor.png">
-        
+        <img src="buttons/cursor.png">        
     </div>
     <div id="finger">
         <img src="buttons/icons8-курсор-рука-64.png">
@@ -52,8 +54,18 @@
       </div>
     </div>
     <div id="co">
+        <div id="cou500">+500</div>
         <div id="cou"></div>
         <div id="record"></div>
+        <div id="fire">
+            <img src="buttons/fire.png">
+        </div>
+        <div id="firecount"></div>
+        <div id="birddiv">
+            <img src="buttons/fenixpng.png">
+        </div>
+        <div id="bird"></div>
+        
     </div>
     
     <script type="module">
@@ -62,8 +74,15 @@
         let collision2 = false
         let collision3 = false
         let collision4 = false
+        let ballcall1 = false
+        let ballcall2 = false
+        let ballcall3 = false
+        let ballcall4 = false
+        let ballcall5 = false
         let moveFunc = false
         let i = 0, sound;
+        let firecount = 10;
+        let bird = 0
         let soundoff = document.getElementById("sound");
         let soundon = document.getElementById("sound-on");
         let volume = document.getElementById("fader");
@@ -73,7 +92,6 @@
         new1.onclick = function(){
             document.location.reload(true)
         }
-
         setInterval(function (n){ 
             if(collision1||collision || collision2 ||collision3 ||collision4){
                 moveFunc = false
@@ -99,8 +117,8 @@
                 soundon.style.display = "block";
                 volume.style.display = "block"
             }
-  
         }, 100);
+
         
         import * as THREE from '../../build/three.module.js';
         import {GLTFLoader} from './GLTFLoader.js';
@@ -109,9 +127,9 @@
         let scene, renderer,camera, model, clock, mixer, mixer1,mixer2,mixer3,mixer4,mixer5,texture,requestId,
         fog, eagle1,eagle2,eagle3, eagle4,eagle5, modelBox, eagleBox1, eagleBox2, eagleBox3,eagleBox4,eagleBox5, 
         firstBB,secondBB,thirdBB,fourBB,fifthBB,sixthBB, mesh, setInt1, setInt2,setInt3, setInt4,setInt5,
-        sound1,sound2, audioLoader,wsad, childW;
+        sound1,sound2, audioLoader,wsad, childW,ball, modelball, ballBB, childCou, cou500, rendFunc;
         let startcall = false;
-
+        let ballx = 0
         
         init();
         animate();
@@ -119,7 +137,6 @@
         function callModal() {
             var modal = document.getElementById("myModal");
             modal.style.display = "block";
-            
         }
         
         function init(){
@@ -221,23 +238,33 @@
                 soundon.style.display = "none";
             }
             let startButton = document.getElementById( 'startButton' );
+            rendFunc = setTimeout(function(){
+                startButton.style.display = "block";
+                name.style.display = "block"
+            },2000)
 			startButton.addEventListener( 'click', function () {
-                console.log("SSSSSSSSSSSSSSSS",startcall)
-                    document.getElementById("cursor").style.display = "none"
-                    document.getElementById("finger").style.display = "none"
-                    moveFunc = true
-                    onClicked();
-                    setTimeout( 
-                        render()   
-                    , 1000);
-                    
-                    startButton.style.display = "none";
-                    name.style.display = "none"
-                    wsad = document.getElementById("wsad");
-                    childW = document.createElement("style")
-                    childW.innerHTML = ".keypr{animation-name: key;animation-duration: 3s;}@keyframes key{from{opacity: 1; display: block}to{opacity: 0;display: none}}"
-                    wsad.appendChild(childW)
+                document.getElementById("cursor").style.display = "none"
+                document.getElementById("finger").style.display = "none"
+                document.getElementById("fire").style.display = "block"
+                document.getElementById("firecount").style.display = "block"
+                document.getElementById("bird").style.display = "block"
+                document.getElementById("birddiv").style.display = "block"
+                setTimeout(function(){moveFunc = true},1000)
+                onClicked();
+                render()   
+                document.getElementById("center").style.display = "block"
+                setTimeout(function(){document.getElementById("center").style.display = "none"},2000)
+                startButton.style.display = "none";
+                name.style.display = "none"
+
 			});
+            wsad = document.getElementById("wsad");
+            childW = document.createElement("style")
+            childW.innerHTML = ".keypr{animation-name: key;animation-duration: 4s;}@keyframes key{from{opacity: 1; display: block}to{opacity: 0;display: none}}"
+            wsad.appendChild(childW)
+
+            cou500 = document.getElementById("cou500")
+            childCou = document.createElement("style")
 
             mixer = null;
 	        clock = new THREE.Clock();
@@ -254,17 +281,21 @@
             function ( xhr ) {
                 if(( xhr.loaded / xhr.total * 100 )==100){
                     startcall = true
-                    console.log(xhr.loaded / xhr.total * 100)
                 }               
             },
             function ( error ) {
                 console.log( 'An error happened' );                        
             }
             ); 
+            loader.load("models/fireball.glb", function(glb){
+                ball = glb.scene;
+                ball.scale.set(0.5,0.5,0.5)
+            });
+            modelball = new THREE.Mesh(new THREE.SphereGeometry(18,18,18), new THREE.MeshStandardMaterial( { color: 0xffff00 } ))
+            modelball.position.needsUpdate = true;
 
             modelBox = new THREE.Mesh(new THREE.BoxGeometry(60,40,60), new THREE.MeshStandardMaterial( { color: 0xffff00 } ))
             modelBox.position.needsUpdate = true;
-            firstBB = new THREE.Box3().setFromObject(modelBox);
 
             loader.load("models/eagle.glb", function(glb){
                 eagle1 = glb.scene;
@@ -282,7 +313,6 @@
                 })
             })
             eagleBox1 = new THREE.Mesh(new THREE.BoxGeometry(60,40,60), new THREE.MeshBasicMaterial( { color: 0xffff00 } ))                        
-            secondBB = new THREE.Box3().setFromObject(eagleBox1);
 
             loader.load("models/eagle.glb", function(glb){
                 eagle2 = glb.scene;
@@ -300,7 +330,6 @@
                 })
             })
             eagleBox2 = new THREE.Mesh(new THREE.BoxGeometry(60,40,60), new THREE.MeshBasicMaterial( { color: 0x00ff00 } ))
-            thirdBB = new THREE.Box3().setFromObject(eagleBox2);
 
             loader.load("models/eagle.glb", function(glb){
                 eagle3 = glb.scene;
@@ -318,7 +347,6 @@
                 })
             })
             eagleBox3 = new THREE.Mesh(new THREE.BoxGeometry(60,40,60), new THREE.MeshBasicMaterial( { color: 0xffff00 } ))                        
-            fourBB = new THREE.Box3().setFromObject(eagleBox3);
 
             loader.load("models/eagle.glb", function(glb){
                 eagle4 = glb.scene;
@@ -336,7 +364,6 @@
                 })
             })
             eagleBox5 = new THREE.Mesh(new THREE.BoxGeometry(60,40,60), new THREE.MeshBasicMaterial( { color: 0xffff00 } ))                        
-            sixthBB = new THREE.Box3().setFromObject(eagleBox5);
 
             loader.load("models/eagle.glb", function(glb){
                 eagle5 = glb.scene;
@@ -354,7 +381,6 @@
                 })
             })
             eagleBox4 = new THREE.Mesh(new THREE.BoxGeometry(60,40,60), new THREE.MeshBasicMaterial( { color: 0xffff00 } ))                        
-            fifthBB = new THREE.Box3().setFromObject(eagleBox4);
 
             let material = [];
             let texture_fk = new THREE.TextureLoader().load('penguins/divine_ft.jpg')
@@ -382,9 +408,9 @@
             //add second model
 
             setInt1 = setInterval(function(){
-                eagle1.position.set(600,model.position.y,model.position.z);
+                eagle1.position.set(500,model.position.y,model.position.z);
                 scene.add(eagle1);
-                eagleBox1.position.set(600,model.position.y,model.position.z);                
+                eagleBox1.position.set(500,model.position.y,model.position.z);                
             },Math.ceil(Math.random()*4+5)*1000)
 
             setInt2 = setInterval(function(){
@@ -444,6 +470,8 @@
                 eagleBox5.position.set(600,y4+40,z4);  
                 }
             },Math.ceil(Math.random()*4+5)*1000)
+
+
             globalThis.addEventListener('touchstart', (event) => {
                 if( parseInt(event.changedTouches[0].clientX) < parseInt(screen.width/3) && parseInt(event.changedTouches[0].clientY) < parseInt(screen.height/3)){
                     if(model.position.y<=100 && moveFunc){
@@ -506,7 +534,7 @@
                         model.rotation.x +=0.05
                     }
                 }
-                else if(parseInt(event.changedTouches[0].clientX) < parseInt(screen.width/2) && parseInt(event.changedTouches[0].clientY) < parseInt(2*screen.height/3)){
+                else if(parseInt(event.changedTouches[0].clientX) < parseInt(screen.width/3) && parseInt(event.changedTouches[0].clientY) < parseInt(2*screen.height/3)){
                     if(model.position.z>=-screen.width/5 && moveFunc){
                         model.position.z -=10
                         modelBox.position.z-=10
@@ -519,7 +547,7 @@
                         model.rotation.x -=0.05
                     }
                 }
-                else if(parseInt(event.changedTouches[0].clientX) > parseInt(screen.width/2) && parseInt(event.changedTouches[0].clientY) < parseInt(2*screen.height/3)){
+                else if(parseInt(event.changedTouches[0].clientX) > parseInt(2*screen.width/3) && parseInt(event.changedTouches[0].clientY) < parseInt(2*screen.height/3)){
                     if(model.position.z<=screen.width/5 && moveFunc){
                         model.position.z +=10
                         modelBox.position.z+=10
@@ -530,6 +558,19 @@
                     }
                     if(model.rotation.x<0.4 && moveFunc){
                         model.rotation.x +=0.05
+                    }
+                }
+                else if(parseInt(event.changedTouches[0].clientX) > parseInt(screen.width/3) && parseInt(event.changedTouches[0].clientX) < parseInt(2*screen.width/3) && parseInt(event.changedTouches[0].clientY) < parseInt(2*screen.height/3)){
+                    if(firecount>0 && moveFunc == true ){
+                        ball.position.y = model.position.y;
+                        ball.position.z = model.position.z+25
+                        modelball.position.y = model.position.y;
+                        modelball.position.z = model.position.z-10
+                        ball.position.x = 0
+                        model.position.x = 0
+                        scene.add(ball)
+                        ballx = 0
+                        firecount -=1
                     }
                 }
                 else if(parseInt(event.changedTouches[0].clientX) < parseInt(screen.width/3) && parseInt(event.changedTouches[0].clientY) > parseInt(2*screen.height/3)){
@@ -557,9 +598,10 @@
                     }
                 }
                 else if(parseInt(event.changedTouches[0].clientX) > parseInt(screen.width/3) && parseInt(event.changedTouches[0].clientX) < parseInt(2*screen.width/3)  && parseInt(event.changedTouches[0].clientY) > parseInt(2*screen.height/3)){
+                    console.log(screen.width/3, event.changedTouches[0].clientX)
                     if(model.position.y>=-100 && moveFunc){
-                    model.position.y -=10
-                    modelBox.position.y-=10
+                        model.position.y -=8
+                        modelBox.position.y-=8
                     }
                     else {
                         model.position.y -=0
@@ -656,7 +698,7 @@
                         model.rotation.x +=0.05
                     }
                 }
-                else if(parseInt(e.x) < parseInt(screen.width/2) && parseInt(e.y) < parseInt(2*screen.height/3)){
+                else if(parseInt(e.x) < parseInt(screen.width/3) && parseInt(e.y) < parseInt(2*screen.height/3)){
                     if(model.position.z>=-250 && moveFunc){
                         model.position.z -=10
                         modelBox.position.z-=10
@@ -669,7 +711,7 @@
                         model.rotation.x -=0.05
                     }
                 }
-                else if(parseInt(e.x) > parseInt(screen.width/2) && parseInt(e.y) < parseInt(2*screen.height/3)){
+                else if(parseInt(e.x) > parseInt(2*screen.width/3) && parseInt(e.y) < parseInt(2*screen.height/3)){
                     if(model.position.z<=250 && moveFunc){
                         model.position.z +=10
                         modelBox.position.z+=10
@@ -680,6 +722,17 @@
                     }
                     if(model.rotation.x<0.4 && moveFunc){
                         model.rotation.x +=0.05
+                    }
+                }
+                else if(parseInt(e.x) > parseInt(screen.width/3) && parseInt(e.x) < parseInt(2*screen.width/3) && parseInt(e.y) < parseInt(2*screen.height/3)){
+                    if(firecount>0 && moveFunc == true ){
+                        ball.position.y = model.position.y;
+                        ball.position.z = model.position.z+25
+                        modelball.position.y = model.position.y;
+                        modelball.position.z = model.position.z-10
+                        scene.add(ball)
+                        ballx = 0
+                        firecount -=1
                     }
                 }
                 else if(parseInt(e.x) < parseInt(screen.width/3) && parseInt(e.y) > parseInt(2*screen.height/3)){
@@ -708,8 +761,8 @@
                 }
                 else if(parseInt(e.x) > parseInt(screen.width/3) && parseInt(e.x) < parseInt(2*screen.width/3)  && parseInt(e.y) > parseInt(2*screen.height/3)){
                     if(model.position.y>=-100 && moveFunc){
-                    model.position.y -=10
-                    modelBox.position.y-=10
+                        model.position.y -=10
+                        modelBox.position.y-=10
                     }
                     else {
                         model.position.y -=0
@@ -777,6 +830,7 @@
                     if(model.position.z>=-250 ){
                         model.position.z -=10
                         modelBox.position.z-=10
+
                     }
                     else {
                         model.position.z -=0
@@ -799,6 +853,18 @@
                         model.rotation.x +=0.05
                     }
                 }
+                if(e.keyCode == 32 && firecount>0 && moveFunc == true ){
+                    ball.position.y = model.position.y;
+                    ball.position.z = model.position.z+25
+                    modelball.position.y = model.position.y;
+                    modelball.position.z = model.position.z-10
+                    ballx = 0
+                    firecount -=1
+                    scene.add(ball)
+                }
+                else if (e.keyCode == 13){
+                    document.location.reload(true)
+                }
                 })
             }
             move()
@@ -815,7 +881,6 @@
             window.cancelAnimationFrame(requestId);
             requestId = undefined;
         } 
-
         let names, gamername
         let name = document.getElementById("name");
         name.value = localStorage.getItem("gamername")
@@ -846,6 +911,9 @@
                     localStorage.setItem("name", "Your record")
                 }
             } 
+            document.getElementById("firecount").innerHTML = firecount
+            document.getElementById("bird").innerHTML = bird
+            
         }
 
         function animate(){
@@ -876,6 +944,7 @@
             if (sound.isPlaying) sound.stop();
 	        sound.play();
         }
+        
  
         function render(){
             point()
@@ -1033,6 +1102,66 @@
             if(mesh.position.x < -1000){
                 mesh.position.x=-100
             }
+            if(i%500 ==0){
+                firecount +=1
+            }
+            if(ballcall1){
+                eagle1.position.x = -10000;
+                eagleBox1.position.x = -10000;
+                scene.remove(ball)
+                scene.remove(modelball)
+                i +=500
+                bird +=1
+                cou500.style.opacity = "1"
+                setTimeout(function(){cou500.style.opacity = "0"},1000)
+
+            }
+            else if(ballcall2){
+                eagle2.position.x = -10000;
+                eagleBox2.position.x = -10000;
+                scene.remove(ball)
+                scene.remove(modelball)
+                i +=500
+                bird +=1
+                cou500.style.opacity = "1"
+                setTimeout(function(){cou500.style.opacity = "0"},1000)
+
+            }
+            else if(ballcall3){
+                eagle3.position.x = -10000;
+                eagleBox3.position.x = -10000;
+                scene.remove(ball)
+                scene.remove(modelball)
+                i +=500
+                bird +=1
+                cou500.style.opacity = "1"
+                setTimeout(function(){cou500.style.opacity = "0"},1000)
+
+            }
+            else if(ballcall4){
+                eagle4.position.x = -10000;
+                eagleBox4.position.x = -10000;
+                scene.remove(ball)
+                scene.remove(modelball)
+                i +=500
+                bird +=1
+                cou500.style.opacity = "1"
+                setTimeout(function(){cou500.style.opacity = "0"},1000)
+
+            }
+            else if(ballcall5){
+                eagle5.position.x = -10000;
+                eagleBox5.position.x = -10000;
+                scene.remove(ball)
+                scene.remove(modelball)
+                i +=500
+                bird +=1
+                cou500.style.opacity = "1"
+                setTimeout(function(){cou500.style.opacity = "0"},1000)
+            }
+            ballx += 25
+            ball.position.x = ballx;
+            modelball.position.x = ballx;
             secondBB = new THREE.Box3().setFromObject(eagleBox1);
             thirdBB = new THREE.Box3().setFromObject(eagleBox2);
             fourBB = new THREE.Box3().setFromObject(eagleBox3);
@@ -1043,7 +1172,14 @@
             collision1 = firstBB.intersectsBox(thirdBB);   
             collision2 = firstBB.intersectsBox(fourBB); 
             collision3 = firstBB.intersectsBox(fifthBB);  
-            collision4 = firstBB.intersectsBox(sixthBB);      
+            collision4 = firstBB.intersectsBox(sixthBB);  
+            ballBB = new THREE.Box3().setFromObject(modelball);
+            ballcall1 = ballBB.intersectsBox(secondBB);  
+            ballcall2 = ballBB.intersectsBox(thirdBB)
+            ballcall3 = ballBB.intersectsBox(fourBB)
+            ballcall4 = ballBB.intersectsBox(fifthBB)
+            ballcall5 = ballBB.intersectsBox(sixthBB) 
+            console.log(ballcall1, ballcall2, ballcall3, ballcall4, ballcall5)
             renderer.render(scene,camera);
         }
     </script>
