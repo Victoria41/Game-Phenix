@@ -49,8 +49,11 @@
       <!-- Modal content -->
       <div class="modal-content">
         <div class="game">Game over</div>        
-        <div class="game" id="demo"></div>            
-        <input type="button" value="New Game" id="new">
+        <div class="game" id="demo"></div>    
+        <div class="game">
+            <input type="button" value="New Game" id="new" >
+        </div>        
+        
       </div>
     </div>
     <div id="co">
@@ -65,7 +68,6 @@
             <img src="buttons/fenixpng.png">
         </div>
         <div id="bird"></div>
-        
     </div>
     
     <script type="module">
@@ -249,7 +251,7 @@
                 document.getElementById("firecount").style.display = "block"
                 document.getElementById("bird").style.display = "block"
                 document.getElementById("birddiv").style.display = "block"
-                setTimeout(function(){moveFunc = true},1000)
+                setTimeout(function(){moveFunc = true},500)
                 onClicked();
                 render()   
                 document.getElementById("center").style.display = "block"
@@ -291,7 +293,7 @@
                 ball = glb.scene;
                 ball.scale.set(0.5,0.5,0.5)
             });
-            modelball = new THREE.Mesh(new THREE.SphereGeometry(18,18,18), new THREE.MeshStandardMaterial( { color: 0xffff00 } ))
+            modelball = new THREE.Mesh(new THREE.SphereGeometry(11,11,11), new THREE.MeshStandardMaterial( { color: 0xffff00 } ))
             modelball.position.needsUpdate = true;
 
             modelBox = new THREE.Mesh(new THREE.BoxGeometry(60,40,60), new THREE.MeshStandardMaterial( { color: 0xffff00 } ))
@@ -405,7 +407,6 @@
             mesh = new THREE.Mesh(geo, material);
             mesh.position.set(-100,100,-100)
             scene.add(mesh)
-            //add second model
 
             setInt1 = setInterval(function(){
                 eagle1.position.set(500,model.position.y,model.position.z);
@@ -470,7 +471,6 @@
                 eagleBox5.position.set(600,y4+40,z4);  
                 }
             },Math.ceil(Math.random()*4+5)*1000)
-
 
             globalThis.addEventListener('touchstart', (event) => {
                 if( parseInt(event.changedTouches[0].clientX) < parseInt(screen.width/3) && parseInt(event.changedTouches[0].clientY) < parseInt(screen.height/3)){
@@ -564,7 +564,7 @@
                     if(firecount>0 && moveFunc == true ){
                         ball.position.y = model.position.y;
                         ball.position.z = model.position.z+25
-                        modelball.position.y = model.position.y;
+                        modelball.position.y = model.position.y+5;
                         modelball.position.z = model.position.z-10
                         ball.position.x = 0
                         model.position.x = 0
@@ -598,7 +598,6 @@
                     }
                 }
                 else if(parseInt(event.changedTouches[0].clientX) > parseInt(screen.width/3) && parseInt(event.changedTouches[0].clientX) < parseInt(2*screen.width/3)  && parseInt(event.changedTouches[0].clientY) > parseInt(2*screen.height/3)){
-                    console.log(screen.width/3, event.changedTouches[0].clientX)
                     if(model.position.y>=-100 && moveFunc){
                         model.position.y -=8
                         modelBox.position.y-=8
@@ -661,7 +660,7 @@
                         model.rotation.x -=0.05
                     }
                 }
-                else if( parseInt(e.x) > parseInt(screen.width/3) && parseInt(e.y) < parseInt(2*screen.width/3)  && parseInt(e.y) < parseInt(screen.height/3)){
+                else if( parseInt(e.x) > parseInt(screen.width/3) && parseInt(e.x) < parseInt(2*screen.width/3)  && parseInt(e.y) < parseInt(screen.height/3)){
                     if(model.position.y<=100 && moveFunc){
                         model.position.y +=10
                         modelBox.position.y+=10
@@ -686,7 +685,7 @@
                     if(model.rotation.z<0.4 && moveFunc){
                         model.rotation.z +=0.05;
                     }  
-                    if(model.position.z<=250 && moveFunc){
+                    if(model.position.z<=screen.width/5 && moveFunc){
                         model.position.z +=8
                         modelBox.position.z+=8
                     }
@@ -728,7 +727,7 @@
                     if(firecount>0 && moveFunc == true ){
                         ball.position.y = model.position.y;
                         ball.position.z = model.position.z+25
-                        modelball.position.y = model.position.y;
+                        modelball.position.y = model.position.y+5;
                         modelball.position.z = model.position.z-10
                         scene.add(ball)
                         ballx = 0
@@ -856,7 +855,7 @@
                 if(e.keyCode == 32 && firecount>0 && moveFunc == true ){
                     ball.position.y = model.position.y;
                     ball.position.z = model.position.z+25
-                    modelball.position.y = model.position.y;
+                    modelball.position.y = model.position.y+5;
                     modelball.position.z = model.position.z-10
                     ballx = 0
                     firecount -=1
@@ -1105,7 +1104,7 @@
             if(i%500 ==0){
                 firecount +=1
             }
-            if(ballcall1){
+            if(ballcall1 && moveFunc){
                 eagle1.position.x = -10000;
                 eagleBox1.position.x = -10000;
                 scene.remove(ball)
@@ -1116,7 +1115,7 @@
                 setTimeout(function(){cou500.style.opacity = "0"},1000)
 
             }
-            else if(ballcall2){
+            else if(ballcall2 && moveFunc){
                 eagle2.position.x = -10000;
                 eagleBox2.position.x = -10000;
                 scene.remove(ball)
@@ -1127,7 +1126,7 @@
                 setTimeout(function(){cou500.style.opacity = "0"},1000)
 
             }
-            else if(ballcall3){
+            else if(ballcall3 && moveFunc){
                 eagle3.position.x = -10000;
                 eagleBox3.position.x = -10000;
                 scene.remove(ball)
@@ -1138,7 +1137,7 @@
                 setTimeout(function(){cou500.style.opacity = "0"},1000)
 
             }
-            else if(ballcall4){
+            else if(ballcall4 && moveFunc){
                 eagle4.position.x = -10000;
                 eagleBox4.position.x = -10000;
                 scene.remove(ball)
@@ -1149,7 +1148,7 @@
                 setTimeout(function(){cou500.style.opacity = "0"},1000)
 
             }
-            else if(ballcall5){
+            else if(ballcall5 && moveFunc){
                 eagle5.position.x = -10000;
                 eagleBox5.position.x = -10000;
                 scene.remove(ball)
@@ -1179,7 +1178,6 @@
             ballcall3 = ballBB.intersectsBox(fourBB)
             ballcall4 = ballBB.intersectsBox(fifthBB)
             ballcall5 = ballBB.intersectsBox(sixthBB) 
-            console.log(ballcall1, ballcall2, ballcall3, ballcall4, ballcall5)
             renderer.render(scene,camera);
         }
     </script>
