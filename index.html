@@ -240,10 +240,6 @@
                 soundon.style.display = "none";
             }
             let startButton = document.getElementById( 'startButton' );
-            rendFunc = setTimeout(function(){
-                startButton.style.display = "block";
-                name.style.display = "block"
-            },2000)
 			startButton.addEventListener( 'click', function () {
                 document.getElementById("cursor").style.display = "none"
                 document.getElementById("finger").style.display = "none"
@@ -258,6 +254,74 @@
                 setTimeout(function(){document.getElementById("center").style.display = "none"},2000)
                 startButton.style.display = "none";
                 name.style.display = "none"
+                setInt1 = setInterval(function(){
+                eagle1.position.set(500,model.position.y,model.position.z);
+                scene.add(eagle1);
+                eagleBox1.position.set(500,model.position.y,model.position.z);     
+                scene.add(eagleBox1)           
+            },Math.ceil(Math.random()*4+5)*1000)
+
+            setInt2 = setInterval(function(){
+                let y1 = Math.floor(Math.random()*100);
+                if (y1%3 == 0)  {
+                y1 = -y1;
+                }
+                let z1 = Math.floor(Math.random()*100);
+                if(z1%3 == 0){
+                    z1 = -z1
+                }
+                eagle2.position.set(500,y1,z1);
+                eagleBox2.position.set(500,y1+40,z1);
+                scene.add(eagle2);
+                scene.add(eagleBox2)
+            },Math.ceil(Math.random()*4+5)*1000)
+            
+            setInt3 = setInterval(function(){
+                let y2 = Math.floor(Math.random()*100);
+                if (y2%3 == 0)  {
+                    y2 = -y2;
+                }
+                let z2 = Math.floor(Math.random()*100);
+                if(z2%3 == 0){
+                    z2 = -z2
+                }
+                eagle3.position.set(600,y2,z2);
+                scene.add(eagle3);
+                eagleBox3.position.set(600,y2+40,z2);   
+                scene.add(eagleBox3)             
+            },Math.ceil(Math.random()*4+5)*1000)
+
+            setInt4 = setInterval(function(){
+                let y3 = Math.floor(Math.random()*100);
+                if (y3%3 == 0)  {
+                    y3 = -y3;
+                }
+                let z3 = Math.floor(Math.random()*100);
+                if(z3%3 == 0){
+                    z3 = -z3
+                }
+                eagle4.position.set(600,y3,z3);
+                scene.add(eagle4);
+                eagleBox4.position.set(600,y3+40,z3);  
+                scene.add(eagleBox4)
+            },Math.ceil(Math.random()*4+5)*1000)
+
+            setInt5 = setInterval(function(){
+                if(i>1000){
+                    let y4 = Math.floor(Math.random()*100);
+                if (y4%2 == 0)  {
+                    y4 = -y4;
+                }
+                let z4 = Math.floor(Math.random()*100);
+                if(z4%3 == 0){
+                    z4 = -z4
+                }
+                eagle5.position.set(600,y4,z4);
+                scene.add(eagle5);
+                eagleBox5.position.set(600,y4+40,z4);  
+                scene.add(eagleBox5)
+                }
+            },Math.ceil(Math.random()*4+5)*1000)
 
 			});
             wsad = document.getElementById("wsad");
@@ -305,7 +369,7 @@
                 mixer1.clipAction(glb.animations[0]).play();
                 eagle1.scale.set(25,25,25);
                 eagle1.position.set(600,100,0);
-                eagleBox1.position.set(5000,140,0);
+                eagleBox1.position.set(600,140,0);
                 eagle1.rotation.set(0,-Math.PI/2,0);
                 eagle1.traverse(item => {
                     if(item.isMesh){
@@ -322,7 +386,7 @@
                 mixer2.clipAction(glb.animations[0]).play();
                 eagle2.scale.set(25,25,25);
                 eagle2.position.set(600,100,0);
-                eagleBox2.position.set(5000,140,0);
+                eagleBox2.position.set(600,140,0);
                 eagle2.rotation.set(0,-Math.PI/2,0);
                 eagle2.traverse(item => {
                     if(item.isMesh){
@@ -339,7 +403,7 @@
                 mixer3.clipAction(glb.animations[0]).play();
                 eagle3.scale.set(25,25,25);
                 eagle3.position.set(600,100,0);
-                eagleBox3.position.set(5000,140,0);
+                eagleBox3.position.set(600,140,0);
                 eagle3.rotation.set(0,-Math.PI/2,0);
                 eagle3.traverse(item => {
                     if(item.isMesh){
@@ -356,7 +420,7 @@
                 mixer4.clipAction(glb.animations[0]).play();
                 eagle4.scale.set(25,25,25);
                 eagle4.position.set(600,100,0);
-                eagleBox4.position.set(5000,140,0);
+                eagleBox4.position.set(600,140,0);
                 eagle4.rotation.set(0,-Math.PI/2,0);
                 eagle4.traverse(item => {
                     if(item.isMesh){
@@ -372,8 +436,8 @@
                 mixer5 = new THREE.AnimationMixer(eagle5);
                 mixer5.clipAction(glb.animations[0]).play();
                 eagle5.scale.set(25,25,25);
-                eagle5.position.set(600,100,0);
-                eagleBox5.position.set(5000,140,0);
+                eagle5.position.set(5000,140,0);
+                eagleBox5.position.set(5000,100,0);
                 eagle5.rotation.set(0,-Math.PI/2,0);
                 eagle5.traverse(item => {
                     if(item.isMesh){
@@ -408,69 +472,7 @@
             mesh.position.set(-100,100,-100)
             scene.add(mesh)
 
-            setInt1 = setInterval(function(){
-                eagle1.position.set(500,model.position.y,model.position.z);
-                scene.add(eagle1);
-                eagleBox1.position.set(500,model.position.y,model.position.z);                
-            },Math.ceil(Math.random()*4+5)*1000)
 
-            setInt2 = setInterval(function(){
-                let y1 = Math.floor(Math.random()*100);
-                if (y1%3 == 0)  {
-                y1 = -y1;
-                }
-                let z1 = Math.floor(Math.random()*100);
-                if(z1%3 == 0){
-                    z1 = -z1
-                }
-                eagle2.position.set(500,y1,z1);
-                eagleBox2.position.set(500,y1,z1);
-                scene.add(eagle2);
-            },Math.ceil(Math.random()*4+5)*1000)
-            
-            setInt3 = setInterval(function(){
-                let y2 = Math.floor(Math.random()*100);
-                if (y2%3 == 0)  {
-                    y2 = -y2;
-                }
-                let z2 = Math.floor(Math.random()*100);
-                if(z2%3 == 0){
-                    z2 = -z2
-                }
-                eagle3.position.set(600,y2,z2);
-                scene.add(eagle3);
-                eagleBox3.position.set(600,y2+40,z2);                
-            },Math.ceil(Math.random()*4+5)*1000)
-
-            setInt4 = setInterval(function(){
-                let y3 = Math.floor(Math.random()*100);
-                if (y3%3 == 0)  {
-                    y3 = -y3;
-                }
-                let z3 = Math.floor(Math.random()*100);
-                if(z3%3 == 0){
-                    z3 = -z3
-                }
-                eagle4.position.set(600,y3,z3);
-                scene.add(eagle4);
-                eagleBox4.position.set(600,y3+40,z3);  
-            },Math.ceil(Math.random()*4+5)*1000)
-
-            setInt5 = setInterval(function(){
-                if(i>1000){
-                    let y4 = Math.floor(Math.random()*100);
-                if (y4%2 == 0)  {
-                    y4 = -y4;
-                }
-                let z4 = Math.floor(Math.random()*100);
-                if(z4%3 == 0){
-                    z4 = -z4
-                }
-                eagle5.position.set(600,y4,z4);
-                scene.add(eagle5);
-                eagleBox5.position.set(600,y4+40,z4);  
-                }
-            },Math.ceil(Math.random()*4+5)*1000)
 
             globalThis.addEventListener('touchstart', (event) => {
                 if( parseInt(event.changedTouches[0].clientX) < parseInt(screen.width/3) && parseInt(event.changedTouches[0].clientY) < parseInt(screen.height/3)){
@@ -918,6 +920,7 @@
         function animate(){
             requestAnimationFrame(animate);
             renderer.render(scene,camera);
+            
             var delta = clock.getDelta();
             if (mixer != null) {
                 mixer.update(delta);
@@ -947,6 +950,7 @@
  
         function render(){
             point()
+
             requestId =  requestAnimationFrame(render);
             var delta = clock.getDelta();
             if(eagle1!= undefined){
@@ -1158,9 +1162,9 @@
                 cou500.style.opacity = "1"
                 setTimeout(function(){cou500.style.opacity = "0"},1000)
             }
-            ballx += 25
             ball.position.x = ballx;
             modelball.position.x = ballx;
+            ballx += 25
             secondBB = new THREE.Box3().setFromObject(eagleBox1);
             thirdBB = new THREE.Box3().setFromObject(eagleBox2);
             fourBB = new THREE.Box3().setFromObject(eagleBox3);
