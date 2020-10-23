@@ -119,7 +119,8 @@
                 soundon.style.display = "block";
                 volume.style.display = "block"
             }
-        }, 100);
+
+        }, 10);
 
         
         import * as THREE from '../../build/three.module.js';
@@ -129,7 +130,7 @@
         let scene, renderer,camera, model, clock, mixer, mixer1,mixer2,mixer3,mixer4,mixer5,texture,requestId,
         fog, eagle1,eagle2,eagle3, eagle4,eagle5, modelBox, eagleBox1, eagleBox2, eagleBox3,eagleBox4,eagleBox5, 
         firstBB,secondBB,thirdBB,fourBB,fifthBB,sixthBB, mesh, setInt1, setInt2,setInt3, setInt4,setInt5,
-        sound1,sound2, audioLoader,wsad, childW,ball, modelball, ballBB, childCou, cou500, rendFunc;
+        sound1,sound2, audioLoader,wsad, childW, ball, modelball, ballBB, childCou, cou500, rendFunc;
         let startcall = false;
         let ballx = 0
         
@@ -239,7 +240,12 @@
                 soundoff.style.display = "block";
                 soundon.style.display = "none";
             }
+
             let startButton = document.getElementById( 'startButton' );
+            setTimeout(function(){
+                startButton.style.display = "block";
+                name.style.display = "block"
+            },3000)
 			startButton.addEventListener( 'click', function () {
                 document.getElementById("cursor").style.display = "none"
                 document.getElementById("finger").style.display = "none"
@@ -258,7 +264,6 @@
                 eagle1.position.set(500,model.position.y,model.position.z);
                 scene.add(eagle1);
                 eagleBox1.position.set(500,model.position.y,model.position.z);     
-                scene.add(eagleBox1)           
             },Math.ceil(Math.random()*4+5)*1000)
 
             setInt2 = setInterval(function(){
@@ -273,7 +278,6 @@
                 eagle2.position.set(500,y1,z1);
                 eagleBox2.position.set(500,y1+40,z1);
                 scene.add(eagle2);
-                scene.add(eagleBox2)
             },Math.ceil(Math.random()*4+5)*1000)
             
             setInt3 = setInterval(function(){
@@ -288,7 +292,6 @@
                 eagle3.position.set(600,y2,z2);
                 scene.add(eagle3);
                 eagleBox3.position.set(600,y2+40,z2);   
-                scene.add(eagleBox3)             
             },Math.ceil(Math.random()*4+5)*1000)
 
             setInt4 = setInterval(function(){
@@ -303,7 +306,6 @@
                 eagle4.position.set(600,y3,z3);
                 scene.add(eagle4);
                 eagleBox4.position.set(600,y3+40,z3);  
-                scene.add(eagleBox4)
             },Math.ceil(Math.random()*4+5)*1000)
 
             setInt5 = setInterval(function(){
@@ -319,7 +321,6 @@
                 eagle5.position.set(600,y4,z4);
                 scene.add(eagle5);
                 eagleBox5.position.set(600,y4+40,z4);  
-                scene.add(eagleBox5)
                 }
             },Math.ceil(Math.random()*4+5)*1000)
 
@@ -1162,9 +1163,11 @@
                 cou500.style.opacity = "1"
                 setTimeout(function(){cou500.style.opacity = "0"},1000)
             }
+
+            ballx += 25
             ball.position.x = ballx;
             modelball.position.x = ballx;
-            ballx += 25
+
             secondBB = new THREE.Box3().setFromObject(eagleBox1);
             thirdBB = new THREE.Box3().setFromObject(eagleBox2);
             fourBB = new THREE.Box3().setFromObject(eagleBox3);

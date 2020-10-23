@@ -252,6 +252,7 @@
     z-index: 2;
     opacity: 1;
     animation: start 2s;
+    display: none
 }
 @keyframes start{
     from{opacity: 0}
@@ -269,6 +270,7 @@
     color: rgb(192,192,192,0.8);
     opacity: 1;
     animation: start 2s;
+    display: none
 }
 #grid{
     display: grid;
